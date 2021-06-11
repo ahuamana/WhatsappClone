@@ -9,7 +9,38 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        ></LinearLayout>
+        android:gravity="center"
+        android:orientation="vertical">
+        
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/icon_whatsapp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Porfavor ingresa un numero de telefono. Te enviaremos un SMS que incluye un codigo de verificacion."
+            android:textAlignment="center"
+            android:layout_marginTop="15dp"
+            android:textSize="17dp"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Telefono"
+            android:layout_margin="20dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ENVIAR CODIGO"
+            android:layout_margin="20dp"
+            android:background="@color/greenDark"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
