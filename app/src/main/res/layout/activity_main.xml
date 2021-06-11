@@ -28,11 +28,33 @@
             android:fontFamily="sans-serif-condensed"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="15dp"/>
-        <EditText
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Telefono"
-            android:layout_margin="20dp"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/cpp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                app:ccp_autoDetectCountry="true"
+                tools:cpp_contentColor="#fcfdfd"
+                tools:ccp_textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/editTextPhone"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="Telefono"
+                android:layout_margin="20dp"/>
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/btnSendCode"
             android:layout_width="match_parent"
