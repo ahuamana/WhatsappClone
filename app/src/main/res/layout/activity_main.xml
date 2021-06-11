@@ -39,7 +39,8 @@
             android:layout_height="wrap_content"
             android:text="ENVIAR CODIGO"
             android:layout_margin="20dp"
-            android:background="@color/greenDark"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/greenDark"
             android:textColor="@color/white"/>
 
     </LinearLayout>

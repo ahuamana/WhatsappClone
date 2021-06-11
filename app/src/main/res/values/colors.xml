@@ -9,5 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="greenDark">#29972D</color>
-    <color name="colorPrimary">#137116</color>
+    <color name="colorPrimary">#065E52</color>
+    <color name="colorPrimaryDark">#054E43</color>
+    <color name="colorAccent">#96BCB7</color>
 </resources>
