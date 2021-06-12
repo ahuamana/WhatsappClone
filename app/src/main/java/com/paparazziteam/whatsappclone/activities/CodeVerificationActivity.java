@@ -20,6 +20,7 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
@@ -124,13 +125,29 @@ public class CodeVerificationActivity extends AppCompatActivity {
                     User user = new User();
                     user.setId(mAuthProvider.getID());//Obtento el UID del telegono logeado
                     user.setPhone(mExtraPhone); //asignamos el telefono a la variable user
-                    //guardamos a CloudFirestore
-                    mUsersProvider.create(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                    //Traer la info del documento para verificar si existe o no
+                    mUsersProvider.getUserInfo(mAuthProvider.getID()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            goTocompleteInfo(); //si es que se guardo correctamente en CloudFirestore mostrar actividad nueva
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(!documentSnapshot.exists())
+                            {
+                                //Iniciar guardado en firestore si no existe el documento
+                                    //guardamos a CloudFirestore
+                                    mUsersProvider.create(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            goTocompleteInfo(); //si es que se guardo correctamente en CloudFirestore mostrar actividad nueva
+                                        }
+                                    });
+                                    //fin guardamos a CloudFirestore
+
+                            }else { goTocompleteInfo();}
+
                         }
-                    }); //fin guardamos a CloudFirestore
+                    });
+
+
 
                     Toast.makeText(CodeVerificationActivity.this, "Exitoso!", Toast.LENGTH_SHORT).show();
                 }else {
