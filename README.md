@@ -1,4 +1,5 @@
 Aplicativo móvil basado en android con java y firebase similar a whatsapp
+
 Caracteristicas
     
     -Chat usuario a usuario.
