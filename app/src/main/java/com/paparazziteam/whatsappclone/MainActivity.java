@@ -9,13 +9,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hbb20.CountryCodePicker;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     Button mButtonSendCode;
     EditText mEditTextPhone;
     CountryCodePicker mCountryCode;
+
+
+    FirebaseFirestore mFirestore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         mButtonSendCode = findViewById(R.id.btnSendCode);
         mEditTextPhone = findViewById(R.id.editTextPhone);
         mCountryCode = findViewById(R.id.cpp);
+
+        mFirestore = FirebaseFirestore.getInstance();
 
 
         mButtonSendCode.setOnClickListener(new View.OnClickListener() {
@@ -34,8 +43,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        saveData();
     }
+
+    public void saveData()
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name","Antony Nicolas");
+        mFirestore.collection("Usuarios").document().set(map);
+    }
+
+
     public void getData()
     {
         String code = mCountryCode.getSelectedCountryCodeWithPlus();
