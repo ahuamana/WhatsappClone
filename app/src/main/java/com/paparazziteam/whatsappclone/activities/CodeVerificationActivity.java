@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,11 +25,15 @@ import com.paparazziteam.whatsappclone.providers.AuthProvider;
 public class CodeVerificationActivity extends AppCompatActivity {
 
     Button mButtonCodeVerification;
-    String mExtraPhone;
+    EditText mEditTextCode;
+    TextView mTextViewSMS;
+    ProgressBar mProgressBar;
 
     AuthProvider mAuthProvider;
+
+    String mExtraPhone;
     String mVerificationId;
-    EditText mEditTextCode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,8 @@ public class CodeVerificationActivity extends AppCompatActivity {
 
         mButtonCodeVerification= findViewById(R.id.btnCodeVerification);
         mEditTextCode = findViewById(R.id.editTextCodeVerification);
+        mTextViewSMS = findViewById(R.id.textViewSMS);
+        mProgressBar = findViewById(R.id.progressBar);
 
         //recibir telefono en la variable mExtraphone
         mExtraPhone = getIntent().getStringExtra("phone");
@@ -71,6 +79,9 @@ public class CodeVerificationActivity extends AppCompatActivity {
             //Retornara el codigo que se envio al mensaje de texto y asiganre a code
             String code = phoneAuthCredential.getSmsCode();
 
+            mProgressBar.setVisibility(View.GONE);
+            mTextViewSMS.setVisibility(View.GONE);
+
             if(code !=null)
             {
                 mEditTextCode.setText(code); // Asignar texto al edit text del xml
@@ -80,7 +91,9 @@ public class CodeVerificationActivity extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-
+            mProgressBar.setVisibility(View.GONE);
+            mTextViewSMS.setVisibility(View.GONE);
+            Toast.makeText(CodeVerificationActivity.this, "Se produjo un error: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
