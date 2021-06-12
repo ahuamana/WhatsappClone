@@ -39,4 +39,13 @@ public class AuthProvider {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId,code);
         return mAuth.signInWithCredential(credential);
     }
+
+    public  String getID()
+    {
+        if(mAuth.getCurrentUser() != null) {
+            return mAuth.getCurrentUser().getUid();
+        } else {
+            return null;
+        }
+    }
 }

@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone">
-        <activity android:name=".activities.CodeVerificationActivity"></activity>
+        <activity android:name=".activities.CompleteInfoActivity"></activity>
+        <activity android:name=".activities.CodeVerificationActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

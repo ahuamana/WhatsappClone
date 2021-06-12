@@ -14,13 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
+import com.paparazziteam.whatsappclone.providers.UsersProvider;
 
 public class CodeVerificationActivity extends AppCompatActivity {
 
@@ -34,6 +37,7 @@ public class CodeVerificationActivity extends AppCompatActivity {
     String mExtraPhone;
     String mVerificationId;
 
+    UsersProvider mUsersProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,9 @@ public class CodeVerificationActivity extends AppCompatActivity {
 
         //ejecutar metodo de la clase
         mAuthProvider.sendCodeVerification(mExtraPhone, mCallbacks, this );
+
+        //
+        mUsersProvider = new UsersProvider();
 
 
         mButtonCodeVerification.setOnClickListener(new View.OnClickListener() {
@@ -114,12 +121,28 @@ public class CodeVerificationActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
+                    User user = new User();
+                    user.setId(mAuthProvider.getID());//Obtento el UID del telegono logeado
+                    user.setPhone(mExtraPhone); //asignamos el telefono a la variable user
+                    //guardamos a CloudFirestore
+                    mUsersProvider.create(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            goTocompleteInfo(); //si es que se guardo correctamente en CloudFirestore mostrar actividad nueva
+                        }
+                    }); //fin guardamos a CloudFirestore
+
                     Toast.makeText(CodeVerificationActivity.this, "Exitoso!", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(CodeVerificationActivity.this, "No se pudo authenticar", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private void goTocompleteInfo() {
+        Intent intent = new Intent(CodeVerificationActivity.this, CompleteInfoActivity.class);
+        startActivity(intent);
     }
 
 
