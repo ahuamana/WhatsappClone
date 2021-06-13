@@ -1,7 +1,9 @@
 package com.paparazziteam.whatsappclone.providers;
 
 import android.content.Context;
+import android.net.Uri;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -24,7 +26,13 @@ public class ImageProvider {
     {
         byte[] imageByte = CompressorBitmapImage.getImage(context, file.getPath(),500,500); //
         StorageReference storage = mStorage.child(new Date() + ".jpg"); // almacera la imagen y se le asigna el nombre con la fecha actual + .jpg
+        mStorage = storage;
         UploadTask task = storage.putBytes(imageByte);
         return task;
+    }
+
+    public Task<Uri> getDownloadUri()
+    {
+        return mStorage.getDownloadUrl();
     }
 }

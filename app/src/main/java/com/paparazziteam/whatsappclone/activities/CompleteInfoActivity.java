@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -81,7 +82,7 @@ public class CompleteInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                updateUserInfo();
+                saveImage();
             }
         });
 
@@ -100,12 +101,13 @@ public class CompleteInfoActivity extends AppCompatActivity {
     }
 
 
-    private void updateUserInfo() {
+    private void updateUserInfo(String url) {
         String username = mTextInputUsername.getText().toString();
         if (!username.equals("")) {
             User user = new User();
             user.setUsername(username);
             user.setId(mAuthProvider.getID());
+            user.setImage(url);
             mUsersProvider.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -118,10 +120,25 @@ public class CompleteInfoActivity extends AppCompatActivity {
 
     private void saveImage()
     {
-        mImageProvider.save(CompleteInfoActivity.this, mImageFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() { //Retorna una tare de FireStorage
+        mImageProvider.save(CompleteInfoActivity.this, mImageFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() { //Retorna una tarea de FireStorage e inicia la tarea de subir foto a firestorage
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-            
+
+                if(task.isSuccessful())
+                {
+                    //Inicia otra tarea para descargar la URL que se subira a firestorage
+                    mImageProvider.getDownloadUri().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String url = uri.toString();
+                            updateUserInfo(url); //ACtualiza la informacion en firestorage
+                        }
+                    });
+                    //Fin de tarea descargar la URL que se subira a firestorage
+                } else {
+                    Toast.makeText(CompleteInfoActivity.this, "No se pudo almacenar la imagen", Toast.LENGTH_SHORT).show();
+                }
+               
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
