@@ -13,4 +13,9 @@
     <color name="colorPrimaryDark">#054E43</color>
     <color name="colorAccent">#96BCB7</color>
     <color name="colorGray">#BABDBD</color>
+
+
+    <color name="colorPrimaryPix">#075e54</color>
+    <color name="colorPrimaryLightPix">#80075e54</color>
+
 </resources>

@@ -63,12 +63,13 @@
     </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImagePhoto"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/ic_person"
         app:civ_circle_background_color="@color/white"
         app:civ_border_color="@color/colorGray"
-        app:civ_border_width="10dp"
+        app:civ_border_width="5dp"
         android:layout_gravity="center|top"
         android:layout_marginTop="90dp"/>
 

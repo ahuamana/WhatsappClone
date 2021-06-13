@@ -101,7 +101,7 @@ public class CodeVerificationActivity extends AppCompatActivity {
         public void onVerificationFailed(@NonNull FirebaseException e) {
             mProgressBar.setVisibility(View.GONE);
             mTextViewSMS.setVisibility(View.GONE);
-            Toast.makeText(CodeVerificationActivity.this, "Se produjo un error: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CodeVerificationActivity.this, "Se produjo un error: "+ e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         @Override
