@@ -13,7 +13,8 @@ public class UsersProvider {
 
     private CollectionReference mCollection;
 
-    public UsersProvider() {
+    public UsersProvider()
+    {
         mCollection = FirebaseFirestore.getInstance().collection("Users");
     }
 
@@ -33,6 +34,7 @@ public class UsersProvider {
 
     public DocumentReference getUserInfo(String id)
     {
+
         return mCollection.document(id);
     }
 }

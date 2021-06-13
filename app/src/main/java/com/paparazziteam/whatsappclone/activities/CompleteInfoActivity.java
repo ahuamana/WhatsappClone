@@ -17,11 +17,16 @@ import android.widget.Toast;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.storage.UploadTask;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
+import com.paparazziteam.whatsappclone.providers.ImageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
 
 import java.io.File;
@@ -38,6 +43,7 @@ public class CompleteInfoActivity extends AppCompatActivity {
 
     UsersProvider mUsersProvider;
     AuthProvider mAuthProvider;
+    ImageProvider mImageProvider;
 
     Options mOptions;
 
@@ -57,6 +63,7 @@ public class CompleteInfoActivity extends AppCompatActivity {
         //Instanciar usuario
         mUsersProvider = new UsersProvider();
         mAuthProvider = new AuthProvider();
+        mImageProvider = new ImageProvider();
 
         //ImagePicker
         mOptions = Options.init()
@@ -72,7 +79,8 @@ public class CompleteInfoActivity extends AppCompatActivity {
 
         mButtonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 updateUserInfo();
             }
         });
@@ -101,10 +109,26 @@ public class CompleteInfoActivity extends AppCompatActivity {
             mUsersProvider.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    saveImage();
                     Toast.makeText(CompleteInfoActivity.this, "La informacion de actualizo correctamente", Toast.LENGTH_LONG).show();
                 }
             });
         }
+    }
+
+    private void saveImage()
+    {
+        mImageProvider.save(CompleteInfoActivity.this, mImageFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() { //Retorna una tare de FireStorage
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+            
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
     //fetch only one image for camera
@@ -118,14 +142,14 @@ public class CompleteInfoActivity extends AppCompatActivity {
             {
                 if (resultCode == Activity.RESULT_OK && requestCode == 100)
                 {
-                    Log.e("DATA INGRESASTE: ", "RequestCode: " + requestCode + " & resultacode: "+resultCode);
+                    //Log.e("DATA INGRESASTE: ", "RequestCode: " + requestCode + " & resultacode: "+resultCode);
                     mReturnValues = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
                     mImageFile = new File(mReturnValues.get(0)); // Guardar en File la imagen recibida si el usuario selecciono una imagen
                     mCircleImagePhoto.setImageBitmap(BitmapFactory.decodeFile(mImageFile.getAbsolutePath())); //Asignar la imagen al id del xml
                 } else {
                     Toast.makeText(this, "error al seleccionar la foto", Toast.LENGTH_SHORT).show();
                 }
-            }else {Log.e("DATA: ", "RequestCode: " + requestCode + " & resultacode: "+resultCode);}
+            }
 
         }else { Toast.makeText(this, "operacion Cancelado!", Toast.LENGTH_SHORT).show(); }
 
