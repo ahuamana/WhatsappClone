@@ -52,6 +52,8 @@ public class CompleteInfoActivity extends AppCompatActivity {
     ArrayList<String> mReturnValues = new ArrayList<>();
 
     File mImageFile;
+
+    String mUsername="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +84,12 @@ public class CompleteInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                saveImage();
+                //Validar campos antes de actualizar en firestorage
+                if(!mUsername.equals("") && mImageFile != null) {
+                    saveImage();
+                }else {
+                    Toast.makeText(CompleteInfoActivity.this, "Debe seleccionar la imagen e ingresar su nombre de usuario", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -102,10 +109,10 @@ public class CompleteInfoActivity extends AppCompatActivity {
 
 
     private void updateUserInfo(String url) {
-        String username = mTextInputUsername.getText().toString();
-        if (!username.equals("")) {
+        mUsername = mTextInputUsername.getText().toString();
+        if (!mUsername.equals("")) {
             User user = new User();
-            user.setUsername(username);
+            user.setUsername(mUsername);
             user.setId(mAuthProvider.getID());
             user.setImage(url);
             mUsersProvider.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
