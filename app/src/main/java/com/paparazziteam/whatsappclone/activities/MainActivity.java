@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.hbb20.CountryCodePicker;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.providers.AuthProvider;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     EditText mEditTextPhone;
     CountryCodePicker mCountryCode;
 
-
+    AuthProvider mAuthProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         mEditTextPhone = findViewById(R.id.editTextPhone);
         mCountryCode = findViewById(R.id.cpp);
 
-
+        mAuthProvider = new AuthProvider();
 
 
         mButtonSendCode.setOnClickListener(new View.OnClickListener() {
@@ -43,7 +44,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Ejecuta este metodo justo antes del Oncreate, es parte del ciclo de vida de android
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+        if(mAuthProvider.getSessionUser() != null)
+        {
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //Eliminar actividades que quedaron atras
+            startActivity(intent);
+        }
+
+    }
 
     public void getData()
     {
