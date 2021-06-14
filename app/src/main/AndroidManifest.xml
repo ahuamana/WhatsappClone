@@ -4,21 +4,21 @@
     package="com.paparazziteam.whatsappclone">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone"
-        android:requestLegacyExternalStorage="true"
         tools:replace="android:theme">
-
-        <activity android:name=".activities.CompleteInfoActivity"></activity>
+        <activity android:name=".activities.HomeActivity"></activity>
+        <activity android:name=".activities.CompleteInfoActivity" />
         <activity android:name=".activities.CodeVerificationActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>

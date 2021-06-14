@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -54,6 +55,9 @@ public class CompleteInfoActivity extends AppCompatActivity {
     File mImageFile;
 
     String mUsername="";
+
+    ProgressDialog mDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,10 @@ public class CompleteInfoActivity extends AppCompatActivity {
         mUsersProvider = new UsersProvider();
         mAuthProvider = new AuthProvider();
         mImageProvider = new ImageProvider();
+
+        mDialog = new ProgressDialog(CompleteInfoActivity.this);
+        mDialog.setTitle("Espere un momento");
+        mDialog.setMessage("Guardando Información");
 
         //ImagePicker
         mOptions = Options.init()
@@ -84,6 +92,8 @@ public class CompleteInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+                mUsername = mTextInputUsername.getText().toString();
+
                 //Validar campos antes de actualizar en firestorage
                 if(!mUsername.equals("") && mImageFile != null) {
                     saveImage();
@@ -109,7 +119,7 @@ public class CompleteInfoActivity extends AppCompatActivity {
 
 
     private void updateUserInfo(String url) {
-        mUsername = mTextInputUsername.getText().toString();
+
         if (!mUsername.equals("")) {
             User user = new User();
             user.setUsername(mUsername);
@@ -118,6 +128,7 @@ public class CompleteInfoActivity extends AppCompatActivity {
             mUsersProvider.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    mDialog.dismiss();
                     Toast.makeText(CompleteInfoActivity.this, "La informacion de actualizo correctamente", Toast.LENGTH_LONG).show();
                 }
             });
@@ -126,6 +137,7 @@ public class CompleteInfoActivity extends AppCompatActivity {
 
     private void saveImage()
     {
+        mDialog.show();  //Mostrando dialogo
         mImageProvider.save(CompleteInfoActivity.this, mImageFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() { //Retorna una tarea de FireStorage e inicia la tarea de subir foto a firestorage
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -142,6 +154,7 @@ public class CompleteInfoActivity extends AppCompatActivity {
                     });
                     //Fin de tarea descargar la URL que se subira a firestorage
                 } else {
+                    mDialog.dismiss();
                     Toast.makeText(CompleteInfoActivity.this, "No se pudo almacenar la imagen", Toast.LENGTH_SHORT).show();
                 }
                
