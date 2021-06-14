@@ -143,8 +143,25 @@ public class CodeVerificationActivity extends AppCompatActivity {
                                     //fin guardamos a CloudFirestore
 
                             }else
-                                { 
-                                    goTocompleteInfo();
+                                {  if(documentSnapshot.contains("username") && documentSnapshot.contains("image"))
+                                    {
+                                        String username = documentSnapshot.getString("username");
+                                        String image = documentSnapshot.getString("image");
+                                        if(username != null && image != null)
+                                        {
+                                            if(!username.equals("") && !image.equals(""))
+                                            {
+                                                goToHomeActivity();
+                                            } else
+                                                {
+                                                    goTocompleteInfo();
+                                                }
+
+                                        } else  {
+                                                    goTocompleteInfo();
+                                                }
+                                    }
+
                                 }
 
                         }
@@ -158,6 +175,12 @@ public class CodeVerificationActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void goToHomeActivity() {
+        Intent intent = new Intent(CodeVerificationActivity.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); // eliminar activities creados anteriormente
+        startActivity(intent);
     }
 
     private void goTocompleteInfo() {
