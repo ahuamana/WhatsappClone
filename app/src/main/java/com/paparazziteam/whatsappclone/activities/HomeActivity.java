@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
         mViewPager.setAdapter(adapter);
 
 
-        new TabLayoutMediator(mTabLayout, mViewPager, adapter.configurationTitle()).attach();  //Asignar todos los campos y fragmentos
+        new TabLayoutMediator(mTabLayout, mViewPager, adapter.configurationTitle()).attach();  //Asignar todos los titulos y fragmentos
 
 
 

@@ -38,12 +38,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         mFragmentTitleList.add(title);
     }
 
-    public CharSequence getPageTitle (int position)
-    {
-        return mFragmentTitleList.get(position);
-    }
-
-
     public TabLayoutMediator.TabConfigurationStrategy configurationTitle ()
     {
         TabLayoutMediator.TabConfigurationStrategy tabConfigurationStrategy = new TabLayoutMediator.TabConfigurationStrategy() {
