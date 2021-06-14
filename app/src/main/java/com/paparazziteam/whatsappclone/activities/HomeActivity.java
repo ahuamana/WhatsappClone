@@ -1,18 +1,26 @@
 package com.paparazziteam.whatsappclone.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableLayout;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.adapters.ViewPagerAdapter;
+import com.paparazziteam.whatsappclone.fragments.ChatsFragment;
+import com.paparazziteam.whatsappclone.fragments.ContacsFragment;
+import com.paparazziteam.whatsappclone.fragments.StatusFragment;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 
 public class HomeActivity extends AppCompatActivity implements MaterialSearchBar.OnSearchActionListener {
@@ -23,7 +31,11 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
 
     TabLayout mTabLayout;
 
-    ViewPager mViewPager;
+    ViewPager2 mViewPager;
+
+    ChatsFragment mChatsFragment;
+    ContacsFragment mContactsFragment;
+    StatusFragment mStatusFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +46,24 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
         mTabLayout = findViewById(R.id.tabLayout);
         mViewPager = findViewById(R.id.viewPager);
 
+
+
         mViewPager.setOffscreenPageLimit(3); // Contendrá el numero de fragmentos
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+        mChatsFragment = new ChatsFragment();
+        mContactsFragment = new ContacsFragment();
+        mStatusFragment = new StatusFragment();
+
+        adapter.addFragment(mChatsFragment, "Chats");
+        adapter.addFragment(mContactsFragment, "Contactos");
+        adapter.addFragment(mStatusFragment, "Status");
+
+        mViewPager.setAdapter(adapter);
+
+
+        new TabLayoutMediator(mTabLayout, mViewPager, adapter.configurationTitle()).attach();  //Asignar todos los campos y fragmentos
+
 
 
         mSearchBar.setOnSearchActionListener(this); //implementar metodos para buscar

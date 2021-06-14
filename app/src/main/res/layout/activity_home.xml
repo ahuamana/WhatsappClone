@@ -43,7 +43,7 @@
             app:tabSelectedTextColor="@color/colorGrayLight"
             app:tabTextColor="@color/colorGrayDark"/>
 
-        <androidx.viewpager.widget.ViewPager
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
