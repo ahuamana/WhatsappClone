@@ -59,6 +59,9 @@ dependencies {
     //zelory compressor android
     implementation 'id.zelory:compressor:2.1.1'
 
+    //material search bar android github
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
+
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -6,12 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".activities.HomeActivity">
 
-    <Button
-        android:id="@+id/btnsignOut"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="Cerrar Session"/>
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mt_hint="Texto de busqueda"
+            app:mt_searchBarColor="@color/colorPrimary"
+            app:mt_placeholder="WhatsApp"
+            app:mt_placeholderColor="@color/white"
+            app:mt_searchIconTint="@color/white"
+            app:mt_hintColor="@color/colorGray"
+            app:mt_textColor="@color/colorGray"
+            app:mt_backIconTint="@color/colorGray"
+            app:mt_menuIconTint="@color/white"
+            app:mt_leftTextSelectorTint="@color/colorGray"/>
+
+    </LinearLayout>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
