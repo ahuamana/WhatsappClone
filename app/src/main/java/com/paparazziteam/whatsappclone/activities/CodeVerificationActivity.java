@@ -159,6 +159,7 @@ public class CodeVerificationActivity extends AppCompatActivity {
 
     private void goTocompleteInfo() {
         Intent intent = new Intent(CodeVerificationActivity.this, CompleteInfoActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); // eliminar activities creados anteriormente
         startActivity(intent);
     }
 

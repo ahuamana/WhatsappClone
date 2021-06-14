@@ -128,11 +128,20 @@ public class CompleteInfoActivity extends AppCompatActivity {
             mUsersProvider.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    mDialog.dismiss();
-                    Toast.makeText(CompleteInfoActivity.this, "La informacion de actualizo correctamente", Toast.LENGTH_LONG).show();
+                    goToHomeActivity(); // ir a la actividad principal
+
                 }
             });
         }
+    }
+
+    private void goToHomeActivity() {
+
+        mDialog.dismiss();
+        Toast.makeText(CompleteInfoActivity.this, "La informacion de actualizo correctamente", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(CompleteInfoActivity.this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //Eliminar actividades que quedaron atras
+        startActivity(intent);
     }
 
     private void saveImage()
