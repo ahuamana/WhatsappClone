@@ -2,6 +2,7 @@ package com.paparazziteam.whatsappclone.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.tabs.TabLayout;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
@@ -19,12 +21,21 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
 
     MaterialSearchBar mSearchBar;
 
+    TabLayout mTabLayout;
+
+    ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         mSearchBar = findViewById(R.id.searchBar);
+        mTabLayout = findViewById(R.id.tabLayout);
+        mViewPager = findViewById(R.id.viewPager);
+
+        mViewPager.setOffscreenPageLimit(3); // Contendrá el numero de fragmentos
+
 
         mSearchBar.setOnSearchActionListener(this); //implementar metodos para buscar
         mSearchBar.inflateMenu(R.menu.main_menu); //Añadir el menu opciones al search bar

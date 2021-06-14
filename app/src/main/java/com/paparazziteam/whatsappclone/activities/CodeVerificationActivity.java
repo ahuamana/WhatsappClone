@@ -160,7 +160,10 @@ public class CodeVerificationActivity extends AppCompatActivity {
                                         } else  {
                                                     goTocompleteInfo();
                                                 }
-                                    }
+                                    } else
+                                            {
+                                                goTocompleteInfo();
+                                            }
 
                                 }
 
