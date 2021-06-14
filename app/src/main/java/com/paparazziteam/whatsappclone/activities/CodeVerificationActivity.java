@@ -142,7 +142,10 @@ public class CodeVerificationActivity extends AppCompatActivity {
                                     });
                                     //fin guardamos a CloudFirestore
 
-                            }else { goTocompleteInfo();}
+                            }else
+                                { 
+                                    goTocompleteInfo();
+                                }
 
                         }
                     });

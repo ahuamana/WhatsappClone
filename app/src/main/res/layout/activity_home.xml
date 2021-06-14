@@ -6,11 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".activities.HomeActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/btnsignOut"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Home Activity"/>
+        android:text="Cerrar Session"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

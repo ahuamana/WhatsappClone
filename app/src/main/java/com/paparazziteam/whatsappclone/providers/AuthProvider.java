@@ -55,5 +55,10 @@ public class AuthProvider {
         }
     }
 
+    public void signOut()
+    {
+        mAuth.signOut();
+    }
+
 
 }
