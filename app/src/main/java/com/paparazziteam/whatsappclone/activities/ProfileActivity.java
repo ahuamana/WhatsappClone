@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.utils.Mytoolbar;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -12,5 +13,8 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        Mytoolbar.show(this,"Perfil",true); //mostrar toolbar
+
     }
 }
