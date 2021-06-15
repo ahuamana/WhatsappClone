@@ -14,8 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
     
-    <style name="ToobarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
-
+    <style name="ToobarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorControlNormal">@color/white</item>
         <item name="titleTextColor">@color/white</item>
 
