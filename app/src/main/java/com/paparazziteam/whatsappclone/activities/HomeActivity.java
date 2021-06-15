@@ -85,6 +85,12 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
                 if(item.getItemId() == R.id.itemSignOut)
                 {
                     signOut();
+                }else {
+
+                    if(item.getItemId() == R.id.itemProfile)
+                    {
+                        goToProfile();
+                    }
                 }
 
                 return true;
@@ -95,6 +101,11 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
 
 
 
+    }
+
+    private void goToProfile() {
+        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     private void setupTabIcon() {

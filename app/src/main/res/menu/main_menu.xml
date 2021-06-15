@@ -7,4 +7,10 @@
         android:title="Cerrar sesion"
         app:showAsAction="never"
         ></item>
+
+    <item
+        android:id="@+id/itemProfile"
+        android:title="Perfil"
+        app:showAsAction="never"
+        ></item>
 </menu>
