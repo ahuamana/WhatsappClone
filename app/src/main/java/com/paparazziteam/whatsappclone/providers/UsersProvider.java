@@ -38,4 +38,11 @@ public class UsersProvider {
 
         return mCollection.document(id);
     }
+
+    public Task<Void> deleteImage(String id)
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("image",null);
+        return mCollection.document(id).update(map);
+    }
 }

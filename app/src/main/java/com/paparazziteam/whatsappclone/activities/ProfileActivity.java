@@ -3,12 +3,15 @@ package com.paparazziteam.whatsappclone.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.fragments.BottomSheetSelectImage;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
@@ -25,6 +28,10 @@ public class ProfileActivity extends AppCompatActivity {
     TextView mTextViewPhone;
     CircleImageView mCircleImageProfile;
 
+    FloatingActionButton mFabSelectImage;
+
+    BottomSheetSelectImage mBottomSheetSelectImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +45,24 @@ public class ProfileActivity extends AppCompatActivity {
         mTextViewUsername = findViewById(R.id.textViewUsername);
         mTextViewPhone = findViewById(R.id.textViewPhone);
         mCircleImageProfile = findViewById(R.id.circleImageProfile);
+
+        mFabSelectImage = findViewById(R.id.fabSelectImage);
+
+        mFabSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openBottomSheetSelectImage();
+            }
+        });
         
         getUserInfo();
+
+    }
+
+    private void openBottomSheetSelectImage() {
+
+        mBottomSheetSelectImage = new BottomSheetSelectImage();
+        mBottomSheetSelectImage.show(getSupportFragmentManager(), mBottomSheetSelectImage.getTag());
 
     }
 
