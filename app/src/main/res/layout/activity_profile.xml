@@ -21,6 +21,7 @@
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circleImageProfile"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:src="@drawable/ic_person_white"
@@ -62,6 +63,7 @@
                     android:layout_height="wrap_content"
                     android:text="Nombre"/>
                 <TextView
+                    android:id="@+id/textViewUsername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nombre de usuario"
@@ -115,6 +117,7 @@
                     android:layout_height="wrap_content"
                     android:text="Info"/>
                 <TextView
+                    android:id="@+id/textViewStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hey there I using whatsappClone"
@@ -162,6 +165,7 @@
                     android:layout_height="wrap_content"
                     android:text="Telefono"/>
                 <TextView
+                    android:id="@+id/textViewPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="+51 930292619"
