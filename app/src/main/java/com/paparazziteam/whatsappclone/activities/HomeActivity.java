@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
 import com.google.android.material.tabs.TabLayout;
@@ -20,6 +21,7 @@ import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.adapters.ViewPagerAdapter;
 import com.paparazziteam.whatsappclone.fragments.ChatsFragment;
 import com.paparazziteam.whatsappclone.fragments.ContacsFragment;
+import com.paparazziteam.whatsappclone.fragments.PhotoFragment;
 import com.paparazziteam.whatsappclone.fragments.StatusFragment;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 
@@ -36,6 +38,9 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
     ChatsFragment mChatsFragment;
     ContacsFragment mContactsFragment;
     StatusFragment mStatusFragment;
+    PhotoFragment mPhotoFratgment;
+
+    int mTabSelected = 1 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +59,21 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
         mChatsFragment = new ChatsFragment();
         mContactsFragment = new ContacsFragment();
         mStatusFragment = new StatusFragment();
+        mPhotoFratgment = new PhotoFragment();
 
+        adapter.addFragment(mPhotoFratgment, "");
         adapter.addFragment(mChatsFragment, "Chats");
-        adapter.addFragment(mContactsFragment, "Contactos");
         adapter.addFragment(mStatusFragment, "Status");
+        adapter.addFragment(mContactsFragment, "Contactos");
+
 
         mViewPager.setAdapter(adapter);
 
-
         new TabLayoutMediator(mTabLayout, mViewPager, adapter.configurationTitle()).attach();  //Asignar todos los titulos y fragmentos
 
+        mViewPager.setCurrentItem(mTabSelected);
+
+        setupTabIcon();//Agregar con icono como tab
 
 
         mSearchBar.setOnSearchActionListener(this); //implementar metodos para buscar
@@ -85,6 +95,15 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
 
 
 
+    }
+
+    private void setupTabIcon() {
+
+        mTabLayout.getTabAt(0).setIcon(R.drawable.ic_camera);
+        LinearLayout linearLayout = ((LinearLayout) ((LinearLayout) mTabLayout.getChildAt(0)).getChildAt(0));
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
+        layoutParams.weight = 0.5f;
+        linearLayout.setLayoutParams(layoutParams);
     }
 
     private void signOut() {
