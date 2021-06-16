@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +32,8 @@ public class ProfileActivity extends AppCompatActivity {
     FloatingActionButton mFabSelectImage;
 
     BottomSheetSelectImage mBottomSheetSelectImage;
+
+    User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +64,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void openBottomSheetSelectImage() {
 
-        mBottomSheetSelectImage = new BottomSheetSelectImage();
-        mBottomSheetSelectImage.show(getSupportFragmentManager(), mBottomSheetSelectImage.getTag());
-
+        if(mUser != null)
+        {
+            mBottomSheetSelectImage = BottomSheetSelectImage.newInstance(mUser.getImage());
+            mBottomSheetSelectImage.show(getSupportFragmentManager(), mBottomSheetSelectImage.getTag());
+        }else {
+            Toast.makeText(this, "La informacion no se pudo cargar", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getUserInfo() {
@@ -73,16 +80,16 @@ public class ProfileActivity extends AppCompatActivity {
 
                 if(documentSnapshot.exists())
                 {
-                    User user = documentSnapshot.toObject(User.class);//seteamos a nuestra clase modelo user para almacenar todos los datos ahi
-                    mTextViewUsername.setText(user.getUsername());
-                    mTextViewPhone.setText(user.getPhone());
+                    mUser = documentSnapshot.toObject(User.class);//seteamos a nuestra clase modelo user para almacenar todos los datos ahi
+                    mTextViewUsername.setText(mUser.getUsername());
+                    mTextViewPhone.setText(mUser.getPhone());
 
-                    if(user.getImage()!= null)
+                    if(mUser.getImage()!= null)
                     {
-                        if(!user.getImage().equals(""))
+                        if(!mUser.getImage().equals(""))
                         {
                             Glide.with(ProfileActivity.this)
-                                    .load(user.getImage())
+                                    .load(mUser.getImage())
                                     .into(mCircleImageProfile);
                         }
                     }

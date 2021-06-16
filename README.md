@@ -1,4 +1,4 @@
-Aplicativo móvil basado en android con java y firebase similar a whatsapp
+gAplicativo móvil basado en android con java y firebase similar a whatsapp
 
 Caracteristicas
     
