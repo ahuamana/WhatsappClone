@@ -100,7 +100,7 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful())
                 {
-                    mUserProvider.deleteImage(mAuthProivder.getID()).addOnCompleteListener(new OnCompleteListener<Void>() { //Actualizar campo a nulo de la CloudFirestorage
+                    mUserProvider.deleteImage(mAuthProivder.getID(), null).addOnCompleteListener(new OnCompleteListener<Void>() { //Actualizar campo a nulo de la CloudFirestorage
                         @Override
                         public void onComplete(@NonNull Task<Void> task2) {
 

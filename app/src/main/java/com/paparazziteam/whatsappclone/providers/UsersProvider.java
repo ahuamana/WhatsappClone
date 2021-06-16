@@ -39,10 +39,10 @@ public class UsersProvider {
         return mCollection.document(id);
     }
 
-    public Task<Void> deleteImage(String id)
+    public Task<Void> deleteImage(String id, String url)
     {
         Map<String, Object> map = new HashMap<>();
-        map.put("image",null);
+        map.put("image",url);
         return mCollection.document(id).update(map);
     }
 }
