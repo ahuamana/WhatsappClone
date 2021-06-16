@@ -166,6 +166,10 @@ public class ProfileActivity extends AppCompatActivity {
         mCircleImageProfile.setImageResource(R.drawable.ic_person_white);
     }
 
+    public void setUsernameNew(String usernameNew){
+        mTextViewUsername.setText(usernameNew);
+    }
+
 
     public void startPix() {
         Pix.start(ProfileActivity.this, mOptions);

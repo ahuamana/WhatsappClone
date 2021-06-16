@@ -91,13 +91,14 @@ public class BottomSheetUsername extends BottomSheetDialogFragment {
 
     private void updateUsername() {
 
-        String username = mEditTextUsername.getText().toString();
+        String NewUsername = mEditTextUsername.getText().toString();
 
         if(!username.equals(""))
         {
             mUserProvider.updateUsername(mAuthProvider.getID(), username).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    setNewUsername(NewUsername);
                     dismiss();
                     Toast.makeText(getContext(), "El nombre de usuario se ah actualizado", Toast.LENGTH_SHORT).show();
                 }
@@ -105,6 +106,10 @@ public class BottomSheetUsername extends BottomSheetDialogFragment {
         }
 
 
+    }
+
+    private void setNewUsername(String username) {
+        ((ProfileActivity)getActivity()).setUsernameNew(username);
     }
 
 
