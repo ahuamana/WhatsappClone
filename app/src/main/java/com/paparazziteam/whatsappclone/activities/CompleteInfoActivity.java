@@ -48,10 +48,7 @@ public class CompleteInfoActivity extends AppCompatActivity {
     ImageProvider mImageProvider;
 
     Options mOptions;
-
-
     ArrayList<String> mReturnValues = new ArrayList<>();
-
     File mImageFile;
 
     String mUsername="";

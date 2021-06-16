@@ -77,7 +77,7 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
 
-                updateImage();
+                updateImage(); //actualizar imagen
 
             }
         });
@@ -89,6 +89,7 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
 
     private void updateImage() {
 
+        ((ProfileActivity)getActivity()).startPix();
 
     }
 
@@ -126,7 +127,6 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
     }
 
     private void setImageDefault() {
-
         ((ProfileActivity)getActivity()).setImageDefault();
     }
 
