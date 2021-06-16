@@ -45,4 +45,11 @@ public class UsersProvider {
         map.put("image",url);
         return mCollection.document(id).update(map);
     }
+
+    public Task<Void> updateUsername(String id, String username)
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("username",username);
+        return mCollection.document(id).update(map);
+    }
 }

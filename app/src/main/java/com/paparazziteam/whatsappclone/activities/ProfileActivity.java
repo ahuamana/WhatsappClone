@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.UploadTask;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.fragments.BottomSheetSelectImage;
+import com.paparazziteam.whatsappclone.fragments.BottomSheetUsername;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ImageProvider;
@@ -44,13 +46,15 @@ public class ProfileActivity extends AppCompatActivity {
     AuthProvider mAuthProvider;
     ImageProvider mImageProvider;
 
+
     TextView mTextViewUsername;
     TextView mTextViewPhone;
     CircleImageView mCircleImageProfile;
+    ImageView mImageViewEditUsername;
 
     FloatingActionButton mFabSelectImage;
-
     BottomSheetSelectImage mBottomSheetSelectImage;
+    BottomSheetUsername mBottomSheetUsername;
 
     User mUser;
 
@@ -75,9 +79,8 @@ public class ProfileActivity extends AppCompatActivity {
         mTextViewUsername = findViewById(R.id.textViewUsername);
         mTextViewPhone = findViewById(R.id.textViewPhone);
         mCircleImageProfile = findViewById(R.id.circleImageProfile);
-
         mFabSelectImage = findViewById(R.id.fabSelectImage);
-
+        mImageViewEditUsername = findViewById(R.id.imageViewEditUsername);
 
         //ImagePicker
         mOptions = Options.init()
@@ -98,9 +101,27 @@ public class ProfileActivity extends AppCompatActivity {
                 openBottomSheetSelectImage();
             }
         });
+
+        mImageViewEditUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openBottomSheetUsername();
+            }
+        });
         
         getUserInfo();
 
+    }
+
+    private void openBottomSheetUsername() {
+
+        if(mUser != null)
+        {
+            mBottomSheetUsername = mBottomSheetUsername.newInstance(mUser.getUsername());
+            mBottomSheetUsername.show(getSupportFragmentManager(), mBottomSheetUsername.getTag());
+        }else {
+            Toast.makeText(this, "La informacion no se pudo cargar", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void openBottomSheetSelectImage() {
