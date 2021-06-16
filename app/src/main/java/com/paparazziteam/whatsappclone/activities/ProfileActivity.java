@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.UploadTask;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.fragments.BottomSheetSelectImage;
@@ -136,27 +139,34 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getUserInfo() {
-        mUsersProvider.getUserInfo(mAuthProvider.getID()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() { // .get para obtener la informacion
+        mUsersProvider.getUserInfo(mAuthProvider.getID()).addSnapshotListener(new EventListener<DocumentSnapshot>() {   //Datos en tiempo real, esta constatemente escuchando
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
 
-                if(documentSnapshot.exists())
+                if(documentSnapshot != null)
                 {
-                    mUser = documentSnapshot.toObject(User.class);//seteamos a nuestra clase modelo user para almacenar todos los datos ahi
-                    mTextViewUsername.setText(mUser.getUsername());
-                    mTextViewPhone.setText(mUser.getPhone());
-
-                    if(mUser.getImage()!= null)
+                    if(documentSnapshot.exists())
                     {
-                        if(!mUser.getImage().equals(""))
-                        {
-                            Glide.with(ProfileActivity.this)
-                                    .load(mUser.getImage())
-                                    .into(mCircleImageProfile);
-                        }
-                    }
+                        mUser = documentSnapshot.toObject(User.class);//seteamos a nuestra clase modelo user para almacenar todos los datos ahi
+                        mTextViewUsername.setText(mUser.getUsername());
+                        mTextViewPhone.setText(mUser.getPhone());
 
-                }
+                        if(mUser.getImage()!= null)
+                        {
+                            if(!mUser.getImage().equals(""))
+                            {
+                                Glide.with(ProfileActivity.this)
+                                        .load(mUser.getImage())
+                                        .into(mCircleImageProfile);
+                            }else{
+                                setImageDefault();
+                            }
+                        }else {
+                            setImageDefault();
+                        }
+
+                    }
+                }else {Log.e("","DocumentoLimpio");}
 
             }
         });

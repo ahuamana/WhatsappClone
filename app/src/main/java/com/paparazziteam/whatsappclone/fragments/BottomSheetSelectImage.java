@@ -106,7 +106,7 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
 
                             if(task2.isSuccessful())
                             {
-                                setImageDefault();
+                                //setImageDefault();  //cambiamos la implementacion a firebasestorage
                                 Toast.makeText(getContext(), "La imagen se elimino correctamente", Toast.LENGTH_SHORT).show();
                             }else {
                                 Toast.makeText(getContext(), "No se pudo eliminar el dato de la imagen", Toast.LENGTH_SHORT).show();
