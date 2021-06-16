@@ -28,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.UploadTask;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.fragments.BottomSheetSelectImage;
@@ -66,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
     ArrayList<String> mReturnValues = new ArrayList<>();
     File mImageFile;
 
-
+    ListenerRegistration mListener; //esta variable se crea con la finalidad de que sea mas eficiente el aplicativo y ya no escuche todo el tiempo la base de datos sino solamente cuando e realizen acciones
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,8 +139,19 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(mListener != null)
+        {
+            mListener.remove();
+        }
+
+    }
+
     private void getUserInfo() {
-        mUsersProvider.getUserInfo(mAuthProvider.getID()).addSnapshotListener(new EventListener<DocumentSnapshot>() {   //Datos en tiempo real, esta constatemente escuchando
+         mListener = mUsersProvider.getUserInfo(mAuthProvider.getID()).addSnapshotListener(new EventListener<DocumentSnapshot>() {   //Datos en tiempo real, esta constatemente escuchando
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
 
