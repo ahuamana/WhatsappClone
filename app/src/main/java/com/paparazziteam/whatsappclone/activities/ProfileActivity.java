@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -17,13 +18,18 @@ import com.bumptech.glide.Glide;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.storage.UploadTask;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.fragments.BottomSheetSelectImage;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
+import com.paparazziteam.whatsappclone.providers.ImageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
 import com.paparazziteam.whatsappclone.utils.Mytoolbar;
 
@@ -36,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     UsersProvider mUsersProvider;
     AuthProvider mAuthProvider;
+    ImageProvider mImageProvider;
 
     TextView mTextViewUsername;
     TextView mTextViewPhone;
@@ -52,6 +59,8 @@ public class ProfileActivity extends AppCompatActivity {
     ArrayList<String> mReturnValues = new ArrayList<>();
     File mImageFile;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         mUsersProvider = new UsersProvider();
         mAuthProvider = new AuthProvider();
+
 
         mTextViewUsername = findViewById(R.id.textViewUsername);
         mTextViewPhone = findViewById(R.id.textViewPhone);
@@ -156,6 +166,8 @@ public class ProfileActivity extends AppCompatActivity {
                     mReturnValues = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
                     mImageFile = new File(mReturnValues.get(0)); // Guardar en File la imagen recibida si el usuario selecciono una imagen
                     mCircleImageProfile.setImageBitmap(BitmapFactory.decodeFile(mImageFile.getAbsolutePath())); //Asignar la imagen al id del xml
+
+                    saveImage();//Actualizar imagen en la base de datos
                 } else {
                     Toast.makeText(this, "error al seleccionar la foto", Toast.LENGTH_SHORT).show();
                 }
@@ -185,6 +197,43 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    private void saveImage()
+    {
+        mImageProvider = new ImageProvider();//Instanciar aqui para que no cree una la imagen dentro de la misma imagen y por ende crea una carpeta
+        mImageProvider.save(ProfileActivity.this, mImageFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() { //Retorna una tarea de FireStorage e inicia la tarea de subir foto a firestorage
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                if(task.isSuccessful())
+                {
+                    //Inicia otra tarea para descargar la URL que se subira a firestorage
+                    mImageProvider.getDownloadUri().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String url = uri.toString();
+                            mUsersProvider.updateImage(mAuthProvider.getID(), url).addOnSuccessListener(new OnSuccessListener<Void>() {  //ACtualiza la informacion en firestorage
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(ProfileActivity.this, "La imagen se actualizo correctamente", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                    //Fin de tarea descargar la URL que se subira a firestorage
+                } else {
+
+                    Toast.makeText(ProfileActivity.this, "No se pudo almacenar la imagen", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
 }
