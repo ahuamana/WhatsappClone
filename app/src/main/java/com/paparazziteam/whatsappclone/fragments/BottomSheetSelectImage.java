@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.activities.ProfileActivity;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ImageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
@@ -22,6 +23,7 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
 
 
     LinearLayout mLinearLayoutDeteleImage;
+    LinearLayout mLinearLayoutSelectImage;
     ImageProvider mImageProvider;
     AuthProvider mAuthProivder;
     UsersProvider mUserProvider;
@@ -54,6 +56,7 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.bottom_sheet_select_image, container , false);
 
         mLinearLayoutDeteleImage = view.findViewById(R.id.linearLayoutDeleteImage);
+        mLinearLayoutSelectImage = view.findViewById(R.id.linearLayoutSelectImage);
 
         mImageProvider = new ImageProvider();
         mUserProvider = new UsersProvider();
@@ -70,9 +73,23 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
             }
         });
 
+        mLinearLayoutSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                updateImage();
+
+            }
+        });
+
 
 
         return view;
+    }
+
+    private void updateImage() {
+
+
     }
 
     private void deleteImage() {
@@ -88,6 +105,7 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
 
                             if(task2.isSuccessful())
                             {
+                                setImageDefault();
                                 Toast.makeText(getContext(), "La imagen se elimino correctamente", Toast.LENGTH_SHORT).show();
                             }else {
                                 Toast.makeText(getContext(), "No se pudo eliminar el dato de la imagen", Toast.LENGTH_SHORT).show();
@@ -106,4 +124,11 @@ public class BottomSheetSelectImage  extends BottomSheetDialogFragment {
         });
 
     }
+
+    private void setImageDefault() {
+
+        ((ProfileActivity)getActivity()).setImageDefault();
+    }
+
+
 }

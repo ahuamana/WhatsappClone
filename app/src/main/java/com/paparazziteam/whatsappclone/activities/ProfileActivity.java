@@ -99,4 +99,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void setImageDefault() {
+        mCircleImageProfile.setImageResource(R.drawable.ic_person_white);
+    }
 }
