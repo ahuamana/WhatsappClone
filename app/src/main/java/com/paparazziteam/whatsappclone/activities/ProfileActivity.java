@@ -54,6 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     TextView mTextViewUsername;
     TextView mTextViewPhone;
+    TextView mTextViewState;
     CircleImageView mCircleImageProfile;
     ImageView mImageViewEditUsername;
     ImageView mImageViewEditInfo;
@@ -86,6 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         mTextViewUsername = findViewById(R.id.textViewUsername);
         mTextViewPhone = findViewById(R.id.textViewPhone);
+        mTextViewState = findViewById(R.id.textViewStatus);
         mCircleImageProfile = findViewById(R.id.circleImageProfile);
         mFabSelectImage = findViewById(R.id.fabSelectImage);
         mImageViewEditUsername = findViewById(R.id.imageViewEditUsername);
@@ -185,6 +187,7 @@ public class ProfileActivity extends AppCompatActivity {
                         mUser = documentSnapshot.toObject(User.class);//seteamos a nuestra clase modelo user para almacenar todos los datos ahi
                         mTextViewUsername.setText(mUser.getUsername());
                         mTextViewPhone.setText(mUser.getPhone());
+                        mTextViewState.setText(mUser.getInfo());
 
                         if(mUser.getImage()!= null)
                         {
