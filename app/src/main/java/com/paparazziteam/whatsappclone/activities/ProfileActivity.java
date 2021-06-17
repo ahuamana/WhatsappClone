@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.UploadTask;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.fragments.BottomSheetInfo;
 import com.paparazziteam.whatsappclone.fragments.BottomSheetSelectImage;
 import com.paparazziteam.whatsappclone.fragments.BottomSheetUsername;
 import com.paparazziteam.whatsappclone.models.User;
@@ -55,10 +56,13 @@ public class ProfileActivity extends AppCompatActivity {
     TextView mTextViewPhone;
     CircleImageView mCircleImageProfile;
     ImageView mImageViewEditUsername;
+    ImageView mImageViewEditInfo;
+
 
     FloatingActionButton mFabSelectImage;
     BottomSheetSelectImage mBottomSheetSelectImage;
     BottomSheetUsername mBottomSheetUsername;
+    BottomSheetInfo mBottomSheetInfo;
 
     User mUser;
 
@@ -85,6 +89,7 @@ public class ProfileActivity extends AppCompatActivity {
         mCircleImageProfile = findViewById(R.id.circleImageProfile);
         mFabSelectImage = findViewById(R.id.fabSelectImage);
         mImageViewEditUsername = findViewById(R.id.imageViewEditUsername);
+        mImageViewEditInfo = findViewById(R.id.imageViewEditInfo);
 
         //ImagePicker
         mOptions = Options.init()
@@ -112,9 +117,27 @@ public class ProfileActivity extends AppCompatActivity {
                 openBottomSheetUsername();
             }
         });
-        
+
+        mImageViewEditInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openBottomSheetInfo();
+            }
+        });
+
+
         getUserInfo();
 
+    }
+
+    private void openBottomSheetInfo() {
+        if(mUser != null)
+        {
+            mBottomSheetInfo = mBottomSheetInfo.newInstance(mUser.getInfo());
+            mBottomSheetInfo.show(getSupportFragmentManager(), mBottomSheetInfo.getTag());
+        }else {
+            Toast.makeText(this, "La informacion no se pudo cargar", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void openBottomSheetUsername() {
