@@ -35,7 +35,6 @@ public class UsersProvider {
 
     public DocumentReference getUserInfo(String id)
     {
-
         return mCollection.document(id);
     }
 

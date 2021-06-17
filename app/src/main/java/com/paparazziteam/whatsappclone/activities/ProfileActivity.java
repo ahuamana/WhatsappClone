@@ -87,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         mTextViewUsername = findViewById(R.id.textViewUsername);
         mTextViewPhone = findViewById(R.id.textViewPhone);
-        mTextViewState = findViewById(R.id.textViewStatus);
+        mTextViewState = findViewById(R.id.textViewInfo);
         mCircleImageProfile = findViewById(R.id.circleImageProfile);
         mFabSelectImage = findViewById(R.id.fabSelectImage);
         mImageViewEditUsername = findViewById(R.id.imageViewEditUsername);

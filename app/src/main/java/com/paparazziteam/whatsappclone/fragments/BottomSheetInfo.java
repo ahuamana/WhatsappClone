@@ -92,7 +92,7 @@ public class BottomSheetInfo extends BottomSheetDialogFragment {
 
         if(!info.equals(""))
         {
-            mUserProvider.updateUsername(mAuthProvider.getID(), info).addOnSuccessListener(new OnSuccessListener<Void>() {
+            mUserProvider.updateInfo(mAuthProvider.getID(), info).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     //setNewUsername(info);
