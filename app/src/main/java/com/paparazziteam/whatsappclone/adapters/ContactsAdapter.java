@@ -1,11 +1,13 @@
 package com.paparazziteam.whatsappclone.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.activities.ChatActivity;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 
@@ -24,6 +27,7 @@ public class ContactsAdapter extends FirestoreRecyclerAdapter<User, ContactsAdap
 
     Context context;
     AuthProvider authProvider;
+    View myView;
 
     public ContactsAdapter(@NonNull FirestoreRecyclerOptions options, Context context) {
         super(options);
@@ -45,6 +49,7 @@ public class ContactsAdapter extends FirestoreRecyclerAdapter<User, ContactsAdap
             holder.itemView.setVisibility(View.VISIBLE);
         }
 
+
         holder.textViewUsername.setText(user.getUsername());
         holder.textViewInformation.setText(user.getInfo());
 
@@ -60,6 +65,19 @@ public class ContactsAdapter extends FirestoreRecyclerAdapter<User, ContactsAdap
         }else {holder.circleImageViewUser.setImageResource(R.drawable.ic_person);}
 
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToChatActivity();
+            }
+        });
+
+
+    }
+
+    private void goToChatActivity() {
+        Intent intent = new Intent(context, ChatActivity.class);
+        context.startActivity(intent);
     }
 
     @NonNull
@@ -80,6 +98,7 @@ public class ContactsAdapter extends FirestoreRecyclerAdapter<User, ContactsAdap
         public  viewHolder(View view)
         {
             super(view);
+
             textViewUsername = view.findViewById(R.id.textViewUser_);
             textViewInformation = view.findViewById(R.id.textViewInfo_);
             circleImageViewUser = view.findViewById(R.id.circleImageUser_);
