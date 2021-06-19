@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,21 +16,34 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.models.User;
+import com.paparazziteam.whatsappclone.providers.AuthProvider;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ContactsAdapter extends FirestoreRecyclerAdapter<User, ContactsAdapter.viewHolder > {
 
     Context context;
+    AuthProvider authProvider;
 
     public ContactsAdapter(@NonNull FirestoreRecyclerOptions options, Context context) {
         super(options);
 
         this.context = context;
+        this.authProvider = new AuthProvider();
     }
 
     @Override
     protected void onBindViewHolder(@NonNull viewHolder holder, int position, @NonNull User user) {
+
+        if(user.getId().equals(authProvider.getID()))
+        {
+            RecyclerView.LayoutParams param = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+            param.height = 0; //altura del elemento 0
+            param.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            param.topMargin = 0;
+            param.bottomMargin =0;
+            holder.itemView.setVisibility(View.VISIBLE);
+        }
 
         holder.textViewUsername.setText(user.getUsername());
         holder.textViewInformation.setText(user.getInfo());
