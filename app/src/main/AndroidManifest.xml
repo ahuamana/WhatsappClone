@@ -17,9 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone"
         tools:replace="android:theme">
+        <activity android:name=".activities.ChatActivity"></activity>
         <activity
             android:name=".activities.ProfileActivity"
-            android:parentActivityName=".activities.HomeActivity"/>
+            android:parentActivityName=".activities.HomeActivity" />
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.CompleteInfoActivity" />
         <activity android:name=".activities.CodeVerificationActivity" />
