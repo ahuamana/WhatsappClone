@@ -68,15 +68,16 @@ public class ContactsAdapter extends FirestoreRecyclerAdapter<User, ContactsAdap
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToChatActivity();
+                goToChatActivity(user.getId()); // Envias el id del usuario que seleccione
             }
         });
 
 
     }
 
-    private void goToChatActivity() {
+    private void goToChatActivity(String id) {
         Intent intent = new Intent(context, ChatActivity.class);
+        intent.putExtra("id",id);
         context.startActivity(intent);
     }
 
