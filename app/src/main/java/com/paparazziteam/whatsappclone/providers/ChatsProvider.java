@@ -31,4 +31,10 @@ public class ChatsProvider {
 
        return mCollection.whereIn("id",ids);
     }
+
+    public Query getUsersChats (String idUser)
+    {
+        //retornara si un array con todos los objetos que coincidad con nuestro id dentro del array "ids"
+        return mCollection.whereArrayContains("ids", idUser);
+    }
 }

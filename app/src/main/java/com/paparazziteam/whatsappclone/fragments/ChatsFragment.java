@@ -17,6 +17,7 @@ import com.paparazziteam.whatsappclone.adapters.ChatsAdapter;
 import com.paparazziteam.whatsappclone.adapters.ContactsAdapter;
 import com.paparazziteam.whatsappclone.models.Chat;
 import com.paparazziteam.whatsappclone.models.User;
+import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ChatsProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
 
@@ -29,6 +30,7 @@ public class ChatsFragment extends Fragment {
     ChatsAdapter mAdapter;
     UsersProvider mUsersProvider;
     ChatsProvider mChatsProvider;
+    AuthProvider mAuthProvider;
 
 
     public ChatsFragment() {
@@ -46,6 +48,7 @@ public class ChatsFragment extends Fragment {
         mRecyclerViewChats = mView.findViewById(R.id.recyclerViewChats);
         mUsersProvider = new UsersProvider();
         mChatsProvider = new ChatsProvider();
+        mAuthProvider = new AuthProvider();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerViewChats.setLayoutManager(linearLayoutManager); //para decirle que se posicione cada objeto uno debajo del otro
@@ -57,7 +60,7 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Query query = mUsersProvider.getAllUsersByName();
+        Query query = mChatsProvider.getUsersChats(mAuthProvider.getID());
         FirestoreRecyclerOptions<Chat> options = new FirestoreRecyclerOptions.Builder<Chat>()
                 .setQuery(query, Chat.class)
                 .build();
