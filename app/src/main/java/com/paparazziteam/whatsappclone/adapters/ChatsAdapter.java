@@ -10,16 +10,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ChatActivity;
 import com.paparazziteam.whatsappclone.models.Chat;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
+import com.paparazziteam.whatsappclone.providers.UsersProvider;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -27,6 +35,10 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
     Context context;
     AuthProvider authProvider;
+    UsersProvider mUsersProvider;
+    User user;
+
+    ListenerRegistration listener;
 
 
     public ChatsAdapter(@NonNull FirestoreRecyclerOptions options, Context context) {
@@ -34,11 +46,27 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
         this.context = context;
         this.authProvider = new AuthProvider();
+        this.mUsersProvider = new UsersProvider();
+        this.user = new User();
     }
 
     @Override
     protected void onBindViewHolder(@NonNull viewHolder holder, int position, @NonNull Chat chat) {
 
+        String idUser="";
+
+        //Verificar la posicion donde se encuentra el id del chat
+        for(int i =0; i<chat.getIds().size() ; i++)
+        {
+            if(!authProvider.getID().equals(chat.getIds().get(i)))
+            {
+                idUser = chat.getIds().get(i);
+                break;
+            }
+
+        }
+
+        getUserInfo(holder, idUser);
 
         //holder.textViewUsername.setText(user.getUsername());
         //holder.textViewInformation.setText(user.getInfo());
@@ -68,10 +96,46 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
     }
 
+
+
+    private void getUserInfo(viewHolder holder , String idUser) {
+
+        listener=mUsersProvider.getUserInfo(idUser).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+
+                if(documentSnapshot != null)
+                {
+                    if(documentSnapshot.exists())
+                    {
+                        user = documentSnapshot.toObject(User.class);
+                        holder.textViewUsername.setText(user.getUsername());
+                        if(user.getImage() != null)
+                        {
+                            if(!user.getImage().equals(""))
+                            {
+                                Glide.with(context)
+                                        .load(user.getImage())
+                                        .load(holder.circleImageViewUser);
+                            }else {holder.circleImageViewUser.setImageResource(R.drawable.ic_person);}
+                        }else { holder.circleImageViewUser.setImageResource(R.drawable.ic_person); }
+                    }
+                }
+
+            }
+        });
+
+    }
+
     private void goToChatActivity(String id) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra("id",id);
         context.startActivity(intent);
+    }
+
+    public ListenerRegistration getListener()
+    {
+        return listener;
     }
 
     @NonNull
