@@ -12,15 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.models.Chat;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
+import com.paparazziteam.whatsappclone.providers.ChatsProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -29,6 +36,7 @@ public class ChatActivity extends AppCompatActivity {
     String mExtraIdUser;
     UsersProvider mUsersProvider;
     AuthProvider mAuthProvider;
+    ChatsProvider mChatsProvider;
 
     TextView mTextViewUsername;
     CircleImageView mCircleImageUser;
@@ -38,13 +46,37 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        mExtraIdUser = getIntent().getStringExtra("id");//REcibimos id pasado desde el intent
+        mExtraIdUser = getIntent().getStringExtra("id");//REcibimos id pasado desde el intent del recycler view
         mAuthProvider = new AuthProvider();
         mUsersProvider = new UsersProvider();
+        mChatsProvider = new ChatsProvider();
 
         showChatToolbar(R.layout.chat_toolbar);
         
         getUserInfo();//Obtenemos todos los datos despues de showChatToolbar
+
+        createChat();
+    }
+
+    private void createChat() {
+
+        Chat chat = new Chat();
+        chat.setId(mAuthProvider.getID() + mExtraIdUser);
+        chat.setTimestamp(new Date().getTime());
+        ArrayList<String> ids = new ArrayList<>();
+        ids.add(mAuthProvider.getID());
+        ids.add(mExtraIdUser);
+
+        chat.setIds(ids);
+
+        mChatsProvider.create(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(ChatActivity.this, "El chat se creo correctamente ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     private void getUserInfo() {
