@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.models.Chat;
 import com.paparazziteam.whatsappclone.models.User;
@@ -55,7 +56,29 @@ public class ChatActivity extends AppCompatActivity {
         
         getUserInfo();//Obtenemos todos los datos despues de showChatToolbar
 
-        createChat();
+
+
+        checkIfExistChat();
+    }
+
+    private void checkIfExistChat() {
+
+        mChatsProvider.getChatByUser1AndUser2(mAuthProvider.getID(), mExtraIdUser).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                if(queryDocumentSnapshots != null)
+                {
+                    if(queryDocumentSnapshots.size() == 0)
+                    {
+                        createChat();
+                    }else{
+                        Toast.makeText(ChatActivity.this, "EL chat entre estos dos usarios ya existe", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+        });
     }
 
     private void createChat() {
