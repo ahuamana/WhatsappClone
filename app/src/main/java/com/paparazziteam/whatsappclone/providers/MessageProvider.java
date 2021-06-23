@@ -2,6 +2,7 @@ package com.paparazziteam.whatsappclone.providers;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.paparazziteam.whatsappclone.models.Message;
 
@@ -14,6 +15,8 @@ public class MessageProvider {
 
     public Task<Void> create (Message message)
     {
-        return mCollection.document().set(message);
+        DocumentReference document = mCollection.document();
+        message.setId(document.getId());
+        return document.set(message);
     }
 }

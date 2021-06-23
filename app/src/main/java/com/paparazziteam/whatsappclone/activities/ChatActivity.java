@@ -10,6 +10,8 @@ import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +24,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.models.Chat;
+import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ChatsProvider;
+import com.paparazziteam.whatsappclone.providers.MessageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
 
 import java.util.ArrayList;
@@ -39,9 +43,14 @@ public class ChatActivity extends AppCompatActivity {
     UsersProvider mUsersProvider;
     AuthProvider mAuthProvider;
     ChatsProvider mChatsProvider;
+    MessageProvider mMessageProvider;
 
     TextView mTextViewUsername;
     CircleImageView mCircleImageUser;
+
+    EditText mEditTextMessage;
+    ImageView mImageViewSend;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,10 @@ public class ChatActivity extends AppCompatActivity {
         mAuthProvider = new AuthProvider();
         mUsersProvider = new UsersProvider();
         mChatsProvider = new ChatsProvider();
+        mMessageProvider = new MessageProvider();
+
+        mEditTextMessage = findViewById(R.id.editTextMessage);
+        mImageViewSend = findViewById(R.id.imageViewSend);
 
         showChatToolbar(R.layout.chat_toolbar);
         
@@ -66,7 +79,37 @@ public class ChatActivity extends AppCompatActivity {
             checkIfExistChat();
         }
 
+        mImageViewSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createMessage();
+            }
+        });
 
+    }
+
+    private void createMessage() {
+        String textMessage = mEditTextMessage.getText().toString();
+
+        if(!textMessage.equals(""))
+        {
+            Message message = new Message();
+            message.setIdChat(mExtraIdChat);
+            message.setIdSender(mAuthProvider.getID());
+            message.setIdReceiver(mExtraIdUser);
+            message.setMessage(textMessage);
+            message.setStatus("ENVIADO");
+            message.setTimstamp(new Date().getTime());
+
+            mMessageProvider.create(message).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(ChatActivity.this, "El mensaje se envio correctamente", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Ingresa el mensaje", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void checkIfExistChat() {
