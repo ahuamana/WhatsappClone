@@ -35,6 +35,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatActivity extends AppCompatActivity {
 
     String mExtraIdUser;
+    String mExtraIdChat;
     UsersProvider mUsersProvider;
     AuthProvider mAuthProvider;
     ChatsProvider mChatsProvider;
@@ -47,7 +48,10 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        mExtraIdUser = getIntent().getStringExtra("id");//REcibimos id pasado desde el intent del recycler view
+        mExtraIdUser = getIntent().getStringExtra("idUser");//REcibimos id pasado desde el intent del recycler view
+        mExtraIdChat = getIntent().getStringExtra("idChat");//REcibimos id pasado desde el intent del recycler view
+
+
         mAuthProvider = new AuthProvider();
         mUsersProvider = new UsersProvider();
         mChatsProvider = new ChatsProvider();
@@ -57,8 +61,12 @@ public class ChatActivity extends AppCompatActivity {
         getUserInfo();//Obtenemos todos los datos despues de showChatToolbar
 
 
+        if(mExtraIdChat == null)
+        {
+            checkIfExistChat();
+        }
 
-        checkIfExistChat();
+
     }
 
     private void checkIfExistChat() {
@@ -91,6 +99,7 @@ public class ChatActivity extends AppCompatActivity {
         ids.add(mExtraIdUser);
 
         chat.setIds(ids);
+
 
         mChatsProvider.create(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,34 +69,28 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
         getUserInfo(holder, idUser);
 
-        //holder.textViewUsername.setText(user.getUsername());
-        //holder.textViewInformation.setText(user.getInfo());
 
-        /*
-        if(user.getImage() != null)
-        {
-            if(!user.getImage().equals(""))
-            {
-                Glide.with(context)
-                        .load(user.getImage())
-                        .into(holder.circleImageViewUser);
-            }else {holder.circleImageViewUser.setImageResource(R.drawable.ic_person);}
-
-        }else {holder.circleImageViewUser.setImageResource(R.drawable.ic_person);}
-
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToChatActivity(user.getId()); // Envias el id del usuario que seleccione
-            }
-        });
-
-         */
+        myViewClick(holder, idUser, chat);
 
 
     }
 
+    private void myViewClick(viewHolder holder, String idUser, Chat chat) {
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToChatActivity(chat.getId(),  idUser); // Envias el id del usuario que seleccione
+            }
+        });
+    }
+
+    private void goToChatActivity(String idChat, String idUser) {
+        Intent intent = new Intent(context, ChatActivity.class);
+        intent.putExtra("idUser",idUser);
+        intent.putExtra("idChat",idChat);
+        context.startActivity(intent);
+    }
 
 
     private void getUserInfo(viewHolder holder , String idUser) {
@@ -110,13 +105,17 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
                     {
                         user = documentSnapshot.toObject(User.class);
                         holder.textViewUsername.setText(user.getUsername());
+
                         if(user.getImage() != null)
                         {
                             if(!user.getImage().equals(""))
                             {
+                                //Toast.makeText(context, "Imagen no es nula", Toast.LENGTH_SHORT).show();
+
                                 Glide.with(context)
                                         .load(user.getImage())
-                                        .load(holder.circleImageViewUser);
+                                        .into(holder.circleImageViewUser);
+
                             }else {holder.circleImageViewUser.setImageResource(R.drawable.ic_person);}
                         }else { holder.circleImageViewUser.setImageResource(R.drawable.ic_person); }
                     }
@@ -127,11 +126,7 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
     }
 
-    private void goToChatActivity(String id) {
-        Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra("id",id);
-        context.startActivity(intent);
-    }
+
 
     public ListenerRegistration getListener()
     {

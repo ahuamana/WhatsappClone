@@ -20,7 +20,7 @@ public class ChatsProvider {
 
     public Task<Void> create (Chat chat)
     {
-        return mCollection.document().set(chat);
+        return mCollection.document(chat.getId()).set(chat);
     }
 
     public Query getChatByUser1AndUser2(String idUser1, String idUser2)
