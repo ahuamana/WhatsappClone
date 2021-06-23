@@ -74,10 +74,8 @@ public class ChatActivity extends AppCompatActivity {
         getUserInfo();//Obtenemos todos los datos despues de showChatToolbar
 
 
-        if(mExtraIdChat == null)
-        {
-            checkIfExistChat();
-        }
+        checkIfExistChat();
+
 
         mImageViewSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +102,7 @@ public class ChatActivity extends AppCompatActivity {
             mMessageProvider.create(message).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    mEditTextMessage.setText("");
                     Toast.makeText(ChatActivity.this, "El mensaje se envio correctamente", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -124,6 +123,7 @@ public class ChatActivity extends AppCompatActivity {
                     {
                         createChat();
                     }else{
+                         mExtraIdChat= queryDocumentSnapshots.getDocuments().get(0).getId();
                         Toast.makeText(ChatActivity.this, "EL chat entre estos dos usarios ya existe", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -143,6 +143,7 @@ public class ChatActivity extends AppCompatActivity {
 
         chat.setIds(ids);
 
+        mExtraIdChat = chat.getId();
 
         mChatsProvider.create(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
