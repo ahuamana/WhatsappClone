@@ -2,10 +2,13 @@ package com.paparazziteam.whatsappclone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,6 +58,41 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
         holder.textViewMessage.setText(message.getMessage());
         holder.textViewDate.setText(RelativeTime.timeFormatAMPM(message.getTimestamp(),context));
 
+        //puras configuraciones para verificar quien envia el mensaje
+        if(message.getIdSender().equals(authProvider.getID()))
+        {
+            //signica que nosotros somos el que envio el mensaje, entonces setearemos para que el mensaje se posicione a la derecha
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.setMargins(150,0,0,0);
+            holder.linearLayoutMessage.setLayoutParams(params);
+            holder.linearLayoutMessage.setPadding(80,20,0,20);
+            holder.linearLayoutMessage.setBackground(context.getResources().getDrawable(R.drawable.bubble_corner_right));
+            holder.textViewMessage.setTextColor(Color.BLACK);
+            holder.textViewDate.setTextColor(Color.DKGRAY);
+
+
+        }else
+            {
+                //signica que nosotros NO somos el que envio el mensaje, entonces setearemos para que el mensaje se posicione a la izquierda
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT
+                );
+
+                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                params.setMargins(150,0,150,0);
+                holder.linearLayoutMessage.setLayoutParams(params);
+                holder.linearLayoutMessage.setPadding(30,20,30,20);
+                holder.linearLayoutMessage.setBackground(context.getResources().getDrawable(R.drawable.bubble_corner_left));
+                holder.textViewMessage.setTextColor(Color.BLACK);
+                holder.textViewDate.setTextColor(Color.DKGRAY);
+
+            }
 
     }
 
@@ -80,6 +118,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
         TextView textViewDate;
         ImageView imageViewCheck;
         View myView;
+        LinearLayout linearLayoutMessage;
 
         public  viewHolder(View view)
         {
@@ -88,6 +127,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
             textViewMessage = view.findViewById(R.id.textViewMessage_message);
             textViewDate = view.findViewById(R.id.textViewDate_message);
             imageViewCheck = view.findViewById(R.id.imageViewCheck_message);
+            linearLayoutMessage = view.findViewById(R.id.linearLayoutMessage_message);
 
         }
 
