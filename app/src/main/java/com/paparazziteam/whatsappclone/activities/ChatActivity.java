@@ -4,6 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.media.Image;
@@ -17,12 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.adapters.ChatsAdapter;
+import com.paparazziteam.whatsappclone.adapters.MessageAdapter;
 import com.paparazziteam.whatsappclone.models.Chat;
 import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.models.User;
@@ -51,6 +57,11 @@ public class ChatActivity extends AppCompatActivity {
     EditText mEditTextMessage;
     ImageView mImageViewSend;
 
+    MessageAdapter mAdapter;
+    RecyclerView mRecyclerViewMessages;
+
+    LinearLayoutManager mLinearLayoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +77,13 @@ public class ChatActivity extends AppCompatActivity {
         mChatsProvider = new ChatsProvider();
         mMessageProvider = new MessageProvider();
 
+
         mEditTextMessage = findViewById(R.id.editTextMessage);
         mImageViewSend = findViewById(R.id.imageViewSend);
+        mRecyclerViewMessages = findViewById(R.id.recyclerViewMessages);
+
+        mLinearLayoutManager = new LinearLayoutManager(ChatActivity.this);
+        mRecyclerViewMessages.setLayoutManager(mLinearLayoutManager); // esto es para decirle al recycler view que se muestre de manera lineal, es decir uno debajo del otro
 
         showChatToolbar(R.layout.chat_toolbar);
         
@@ -86,6 +102,29 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Query query = mMessageProvider.getMessagesByChat(mExtraIdChat);
+        FirestoreRecyclerOptions<Message> options = new FirestoreRecyclerOptions.Builder<Message>()
+                .setQuery(query, Message.class)
+                .build();
+
+        mAdapter = new MessageAdapter(options, ChatActivity.this);//inicilizar el adaptador
+        mRecyclerViewMessages.setAdapter(mAdapter);
+
+        mAdapter.startListening();//que escuche en timepo real los cambios
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+         mAdapter.stopListening();
+    }
+
     private void createMessage() {
         String textMessage = mEditTextMessage.getText().toString();
 
@@ -97,7 +136,7 @@ public class ChatActivity extends AppCompatActivity {
             message.setIdReceiver(mExtraIdUser);
             message.setMessage(textMessage);
             message.setStatus("ENVIADO");
-            message.setTimstamp(new Date().getTime());
+            message.setTimestamp(new Date().getTime());
 
             mMessageProvider.create(message).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override

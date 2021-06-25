@@ -8,19 +8,19 @@ public class Message {
     private String idChat;
     private String message;
     private String status;
-    private Long timstamp;
+    private Long timestamp;
 
     public Message() {
     }
 
-    public Message(String id, String idSender, String idReceiver, String idChat, String message, String status, Long timstamp) {
+    public Message(String id, String idSender, String idReceiver, String idChat, String message, String status, Long timestamp) {
         this.id = id;
         this.idSender = idSender;
         this.idReceiver = idReceiver;
         this.idChat = idChat;
         this.message = message;
         this.status = status;
-        this.timstamp = timstamp;
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -71,11 +71,11 @@ public class Message {
         this.status = status;
     }
 
-    public Long getTimstamp() {
-        return timstamp;
+    public Long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimstamp(Long timstamp) {
-        this.timstamp = timstamp;
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }
