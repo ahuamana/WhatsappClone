@@ -74,6 +74,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
             holder.linearLayoutMessage.setBackground(context.getResources().getDrawable(R.drawable.bubble_corner_right));
             holder.textViewMessage.setTextColor(Color.BLACK);
             holder.textViewDate.setTextColor(Color.DKGRAY);
+            holder.imageViewCheck.setVisibility(View.VISIBLE);
 
 
         }else
@@ -85,12 +86,13 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
                 );
 
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                params.setMargins(150,0,150,0);
+                params.setMargins(0,0,150,0);
                 holder.linearLayoutMessage.setLayoutParams(params);
-                holder.linearLayoutMessage.setPadding(80,20,0,20);
+                holder.linearLayoutMessage.setPadding(80,20,30,20);
                 holder.linearLayoutMessage.setBackground(context.getResources().getDrawable(R.drawable.bubble_corner_left));
                 holder.textViewMessage.setTextColor(Color.BLACK);
                 holder.textViewDate.setTextColor(Color.DKGRAY);
+                holder.imageViewCheck.setVisibility(View.GONE);
 
             }
 
