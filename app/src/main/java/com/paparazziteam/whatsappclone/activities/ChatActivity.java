@@ -106,16 +106,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        Query query = mMessageProvider.getMessagesByChat(mExtraIdChat);
-        FirestoreRecyclerOptions<Message> options = new FirestoreRecyclerOptions.Builder<Message>()
-                .setQuery(query, Message.class)
-                .build();
-
-        mAdapter = new MessageAdapter(options, ChatActivity.this);//inicilizar el adaptador
-        mRecyclerViewMessages.setAdapter(mAdapter);
-
-        mAdapter.startListening();//que escuche en timepo real los cambios
-
+        //al iniciar la pantalla este escuchara otra vez
+        if(mAdapter!= null)
+        {
+            mAdapter.startListening();
+        }
     }
 
     @Override
@@ -163,12 +158,27 @@ public class ChatActivity extends AppCompatActivity {
                         createChat();
                     }else{
                          mExtraIdChat= queryDocumentSnapshots.getDocuments().get(0).getId();
+                         getMessagesByChat();
                         Toast.makeText(ChatActivity.this, "EL chat entre estos dos usarios ya existe", Toast.LENGTH_SHORT).show();
                     }
                 }
 
             }
         });
+    }
+
+    private void getMessagesByChat() {
+
+        Query query = mMessageProvider.getMessagesByChat(mExtraIdChat);
+        FirestoreRecyclerOptions<Message> options = new FirestoreRecyclerOptions.Builder<Message>()
+                .setQuery(query, Message.class)
+                .build();
+
+        mAdapter = new MessageAdapter(options, ChatActivity.this);//inicilizar el adaptador
+        mRecyclerViewMessages.setAdapter(mAdapter);
+
+        mAdapter.startListening();//que escuche en timepo real los cambios
+
     }
 
     private void createChat() {
