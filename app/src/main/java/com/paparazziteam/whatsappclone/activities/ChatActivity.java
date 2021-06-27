@@ -179,6 +179,23 @@ public class ChatActivity extends AppCompatActivity {
 
         mAdapter.startListening();//que escuche en timepo real los cambios
 
+        //go to last message when you open the chat, but if not works when you write
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+
+                int numberMessage = mAdapter.getItemCount();
+                int lastMessagePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+
+                if(lastMessagePosition == -1 || (positionStart >= (numberMessage - 1) && lastMessagePosition == (positionStart - 1)))
+                {
+                    mRecyclerViewMessages.scrollToPosition(positionStart);
+                }
+
+            }
+        });
+
     }
 
     private void createChat() {
