@@ -83,6 +83,7 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerViewMessages = findViewById(R.id.recyclerViewMessages);
 
         mLinearLayoutManager = new LinearLayoutManager(ChatActivity.this);
+        mLinearLayoutManager.setStackFromEnd(true);//messages on recycler  put over keyboard
         mRecyclerViewMessages.setLayoutManager(mLinearLayoutManager); // esto es para decirle al recycler view que se muestre de manera lineal, es decir uno debajo del otro
 
         showChatToolbar(R.layout.chat_toolbar);
@@ -137,6 +138,14 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Void aVoid) {
                     mEditTextMessage.setText("");
+
+                    //go to last message when you write
+                    //add settack == true when adapater is initialize
+                    if(mAdapter != null)
+                    {
+                        mAdapter.notifyDataSetChanged();
+                    }
+
                     Toast.makeText(ChatActivity.this, "El mensaje se envio correctamente", Toast.LENGTH_SHORT).show();
                 }
             });
