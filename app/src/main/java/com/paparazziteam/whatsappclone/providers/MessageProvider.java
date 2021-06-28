@@ -38,6 +38,7 @@ public class MessageProvider {
 
     public Query getMessageNotRead(String idChat)
     {
+        //cuando concatenamos dos valors, en firestore debemos añadir indices para que nos devuelva valores y nos de esta respuesta verdadera
         return mCollection.whereEqualTo("idChat", idChat).whereEqualTo("status", "ENVIADO");
     }
 

@@ -168,9 +168,33 @@ public class ChatActivity extends AppCompatActivity {
                     }else{
                          mExtraIdChat= queryDocumentSnapshots.getDocuments().get(0).getId();
                          getMessagesByChat();
-                        Toast.makeText(ChatActivity.this, "EL chat entre estos dos usarios ya existe", Toast.LENGTH_SHORT).show();
+                         //Toast.makeText(ChatActivity.this, "EL chat entre estos dos usarios ya existe", Toast.LENGTH_SHORT).show();
+                         updateStatusMessage();
+                        
                     }
                 }
+
+            }
+        });
+    }
+
+    private void updateStatusMessage() {
+        //.get() para obtener
+        mMessageProvider.getMessageNotRead(mExtraIdChat).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                //for each
+                for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments())
+                {
+                    Message message = document.toObject(Message.class);
+                    //validar solo de los mensajes que otros enviaron y no de el mismo usuario
+                    if(message.getIdSender().equals(mAuthProvider.getID()))
+                    {
+                        mMessageProvider.updateStatus(message.getId(), "VISTO");
+                    }
+                }
+
 
             }
         });
