@@ -35,4 +35,10 @@ public class MessageProvider {
         map.put("status",status);
         return mCollection.document(idMessage).update(map);
     }
+
+    public Query getMessageNotRead(String idChat)
+    {
+        return mCollection.whereEqualTo("idChat", idChat).whereEqualTo("status", "ENVIADO");
+    }
+
 }
