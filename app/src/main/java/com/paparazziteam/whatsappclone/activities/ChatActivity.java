@@ -212,12 +212,15 @@ public class ChatActivity extends AppCompatActivity {
 
         mAdapter.startListening();//que escuche en timepo real los cambios
 
-        //go to last message when you open the chat, but if not works when you write
+        //go to last message when you open the chat, but if not works when you write ////also it listen if any new data is created
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
 
+                //update status if user is already inside the chatId
+                updateStatusMessage();
+                //
                 int numberMessage = mAdapter.getItemCount();
                 int lastMessagePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
 
