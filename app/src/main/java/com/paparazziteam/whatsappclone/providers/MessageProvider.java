@@ -7,6 +7,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.paparazziteam.whatsappclone.models.Message;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MessageProvider {
     CollectionReference mCollection;
 
@@ -24,5 +27,12 @@ public class MessageProvider {
     public Query getMessagesByChat(String idChat)
     {
         return mCollection.whereEqualTo("idChat", idChat).orderBy("timestamp", Query.Direction.ASCENDING);
+    }
+
+    public Task<Void> updateStatus(String idMessage, String status)
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("status",status);
+        return mCollection.document(idMessage).update(map);
     }
 }
