@@ -184,12 +184,13 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
+                //Toast.makeText(ChatActivity.this, "EL chat se actualiza a VISTO", Toast.LENGTH_SHORT).show();
                 //for each
                 for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments())
                 {
                     Message message = document.toObject(Message.class);
                     //validar solo de los mensajes que otros enviaron y no de el mismo usuario
-                    if(message.getIdSender().equals(mAuthProvider.getID()))
+                    if(!message.getIdSender().equals(mAuthProvider.getID()))
                     {
                         mMessageProvider.updateStatus(message.getId(), "VISTO");
                     }
@@ -219,6 +220,7 @@ public class ChatActivity extends AppCompatActivity {
                 super.onItemRangeInserted(positionStart, itemCount);
 
                 //update status if user is already inside the chatId
+
                 updateStatusMessage();
                 //
                 int numberMessage = mAdapter.getItemCount();
@@ -231,6 +233,8 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
+
 
     }
 
