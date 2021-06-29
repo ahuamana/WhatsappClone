@@ -21,12 +21,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ChatActivity;
 import com.paparazziteam.whatsappclone.models.Chat;
+import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
+import com.paparazziteam.whatsappclone.providers.MessageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
+import com.paparazziteam.whatsappclone.utils.RelativeTime;
 
 import java.util.List;
 
@@ -37,6 +41,7 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
     Context context;
     AuthProvider authProvider;
     UsersProvider mUsersProvider;
+    MessageProvider messageProvider;
     User user;
 
     ListenerRegistration listener;
@@ -48,6 +53,7 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
         this.context = context;
         this.authProvider = new AuthProvider();
         this.mUsersProvider = new UsersProvider();
+        this.messageProvider = new MessageProvider();
         this.user = new User();
     }
 
@@ -67,11 +73,36 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
         }
 
+        getLastMessage(holder, chat.getId());
+
         getUserInfo(holder, idUser);
 
 
         myViewClick(holder, idUser, chat);
 
+
+    }
+
+    private void getLastMessage(viewHolder holder, String idChat) {
+
+        messageProvider.getLastMessage(idChat).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException error) {
+
+                if(querySnapshot!= null)
+                {
+                    int size = querySnapshot.size();
+
+                    if(size>0)
+                    {
+                        Message message = querySnapshot.getDocuments().get(0).toObject(Message.class);
+                        holder.textViewLastMessage.setText(message.getMessage());//ultimo mensaje
+                        holder.textViewTimeStamp.setText(RelativeTime.timeFormatAMPM(message.getTimestamp(),context)); // last hour from message
+                    }
+                }
+
+            }
+        });
 
     }
 
