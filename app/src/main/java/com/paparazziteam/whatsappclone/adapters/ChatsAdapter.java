@@ -45,6 +45,7 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
     User user;
 
     ListenerRegistration listener;
+    ListenerRegistration listenerLastMessage;
 
 
     public ChatsAdapter(@NonNull FirestoreRecyclerOptions options, Context context) {
@@ -85,15 +86,15 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
     private void getLastMessage(viewHolder holder, String idChat) {
 
-        messageProvider.getLastMessage(idChat).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        listenerLastMessage = messageProvider.getLastMessage(idChat).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException error) {
 
-                if(querySnapshot!= null)
+                if(querySnapshot != null)
                 {
                     int size = querySnapshot.size();
 
-                    if(size>0)
+                    if(size > 0)
                     {
                         Message message = querySnapshot.getDocuments().get(0).toObject(Message.class);
                         holder.textViewLastMessage.setText(message.getMessage());//ultimo mensaje
@@ -101,6 +102,7 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
                         if(message.getIdSender().equals(authProvider.getID()))
                         {
+
                             holder.imageViewCheck.setVisibility(View.VISIBLE);
 
                             if(message.getStatus().equals("ENVIADO"))
@@ -114,8 +116,10 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
                                     holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_blue);
                                 }
                             }
-                        }else
+                        }
+                        else
                         {
+
                             holder.imageViewCheck.setVisibility(View.GONE);
                         }
 
@@ -184,6 +188,10 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
     public ListenerRegistration getListener()
     {
         return listener;
+    }
+    public ListenerRegistration getListenerLastMessage()
+    {
+        return listenerLastMessage;
     }
 
     @NonNull

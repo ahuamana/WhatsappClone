@@ -86,5 +86,12 @@ public class ChatsFragment extends Fragment {
         {
             mAdapter.getListener().remove(); //remover el escuchador del adapter para que no utilize memoria en background
         }
+
+        if(mAdapter.getListenerLastMessage() != null)
+        {
+            mAdapter.getListenerLastMessage().remove(); //remover el escuchador del adapter para que no utilize memoria en background
+        }
+
+
     }
 }
