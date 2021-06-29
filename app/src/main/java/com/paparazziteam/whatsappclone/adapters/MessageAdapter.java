@@ -76,6 +76,19 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
             holder.textViewDate.setTextColor(Color.DKGRAY);
             holder.imageViewCheck.setVisibility(View.VISIBLE);
 
+            //change state from sensed to viewed
+            if(message.getStatus().equals("ENVIADO"))
+            {
+                holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_gray);
+            }
+            else
+            {
+                if(message.getStatus().equals("VISTO"))
+                {
+                    holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_blue);
+                }
+            }
+
 
         }else
             {
@@ -96,18 +109,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
 
             }
 
-        //change state from sensed to viewed
-        if(message.getStatus().equals("ENVIADO"))
-        {
-            holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_gray);
-        }
-        else
-        {
-            if(message.getStatus().equals("VISTO"))
-            {
-                holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_blue);
-            }
-        }
+
 
 
     }

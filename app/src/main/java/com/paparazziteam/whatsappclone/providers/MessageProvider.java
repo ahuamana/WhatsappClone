@@ -42,4 +42,10 @@ public class MessageProvider {
         return mCollection.whereEqualTo("idChat", idChat).whereEqualTo("status", "ENVIADO");
     }
 
+    public Query getLastMessage(String idChat)
+    {
+        //return last message that is created
+        return mCollection.whereEqualTo("idChat", idChat).orderBy("timestamp", Query.Direction.DESCENDING).limit(1);
+    }
+
 }
