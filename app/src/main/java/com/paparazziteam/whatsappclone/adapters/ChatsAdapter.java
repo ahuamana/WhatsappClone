@@ -98,6 +98,28 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
                         Message message = querySnapshot.getDocuments().get(0).toObject(Message.class);
                         holder.textViewLastMessage.setText(message.getMessage());//ultimo mensaje
                         holder.textViewTimeStamp.setText(RelativeTime.timeFormatAMPM(message.getTimestamp(),context)); // last hour from message
+
+                        if(message.getIdSender().equals(authProvider.getID()))
+                        {
+                            holder.imageViewCheck.setVisibility(View.VISIBLE);
+
+                            if(message.getStatus().equals("ENVIADO"))
+                            {
+                                holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_gray);
+                            }
+                            else
+                             {
+                                if (message.getStatus().equals("VISTO"))
+                                {
+                                    holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_blue);
+                                }
+                            }
+                        }else
+                        {
+                            holder.imageViewCheck.setVisibility(View.GONE);
+                        }
+
+
                     }
                 }
 
