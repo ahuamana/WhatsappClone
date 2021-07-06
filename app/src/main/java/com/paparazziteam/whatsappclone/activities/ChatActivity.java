@@ -245,6 +245,8 @@ public class ChatActivity extends AppCompatActivity {
         Chat chat = new Chat();
         chat.setId(mAuthProvider.getID() + mExtraIdUser);
         chat.setTimestamp(new Date().getTime());
+        chat.setNumberMessages(0);
+
         ArrayList<String> ids = new ArrayList<>();
         ids.add(mAuthProvider.getID());
         ids.add(mExtraIdUser);

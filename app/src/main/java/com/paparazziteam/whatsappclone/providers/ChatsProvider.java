@@ -39,7 +39,8 @@ public class ChatsProvider {
     public Query getUsersChats (String idUser)
     {
         //retornara si un array con todos los objetos que coincidad con nuestro id dentro del array "ids"
-        return mCollection.whereArrayContains("ids", idUser);
+        //return mCollection.whereArrayContains("ids", idUser);
+        return mCollection.whereArrayContains("ids", idUser).whereGreaterThanOrEqualTo("numberMessages",1);//List chat with iduser and also number of messages must be >= 1
     }
 
     public void updateNumberMessages(String idChat)
