@@ -146,6 +146,8 @@ public class ChatActivity extends AppCompatActivity {
                         mAdapter.notifyDataSetChanged();
                     }
 
+                    mChatsProvider.updateNumberMessages(mExtraIdChat);
+
                     Toast.makeText(ChatActivity.this, "El mensaje se envio correctamente", Toast.LENGTH_SHORT).show();
                 }
             });
