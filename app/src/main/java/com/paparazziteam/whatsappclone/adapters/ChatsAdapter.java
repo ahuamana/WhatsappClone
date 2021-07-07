@@ -2,9 +2,11 @@ package com.paparazziteam.whatsappclone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -79,8 +81,41 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
         getUserInfo(holder, idUser);
 
 
+        getMessagesNotRead(holder,chat.getId());
+
         myViewClick(holder, idUser, chat);
 
+
+    }
+
+    private void getMessagesNotRead(viewHolder holder, String idChat) {
+
+        messageProvider.getReceiverMessageNotRead(idChat, authProvider.getID()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable @org.jetbrains.annotations.Nullable QuerySnapshot querySnapshot, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
+
+                    if(querySnapshot != null)
+                    {
+
+
+                        int size = querySnapshot.size();
+
+                        Log.e("LOG",""+size);
+
+                        if(size>0)
+                        {
+                            holder.frameLayoutMessagesNotRead.setVisibility(View.VISIBLE);
+                            holder.textViewMessagesNotRead.setText(String.valueOf(size));
+                            holder.textViewTimeStamp.setTextColor(context.getResources().getColor(R.color.colorGreenAccent));
+                        }else
+                        {
+                            holder.frameLayoutMessagesNotRead.setVisibility(View.GONE);
+                            holder.textViewTimeStamp.setTextColor(context.getResources().getColor(R.color.colorGrayDark));
+                        }
+                    }
+
+            }
+        });
 
     }
 
@@ -129,6 +164,8 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
             }
         });
+
+
 
     }
 
@@ -211,6 +248,8 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
         CircleImageView circleImageViewUser;
         ImageView imageViewCheck;
         View myView;
+        FrameLayout frameLayoutMessagesNotRead;
+        TextView textViewMessagesNotRead;
 
         public  viewHolder(View view)
         {
@@ -221,6 +260,8 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
             textViewTimeStamp = view.findViewById(R.id.textViewTimeStamp_chat_adapter);
             imageViewCheck = view.findViewById(R.id.imageViewCheck_chat_adapter);
             circleImageViewUser = view.findViewById(R.id.circleImageUser_chat_adapter);
+            frameLayoutMessagesNotRead = view.findViewById(R.id.frameLayoutMessagesNotRead);
+            textViewMessagesNotRead = view.findViewById(R.id.textViewMessagesNotRead);
 
         }
 

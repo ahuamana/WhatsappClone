@@ -20,5 +20,6 @@
     <color name="colorPrimaryPix">#075e54</color>
     <color name="colorPrimaryLightPix">#80075e54</color>
     <color name="colorOrange">#EA8E07</color>
+    <color name="colorGreenAccent">#20C65a</color>
 
 </resources>

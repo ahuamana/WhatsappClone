@@ -42,6 +42,12 @@ public class MessageProvider {
         return mCollection.whereEqualTo("idChat", idChat).whereEqualTo("status", "ENVIADO");
     }
 
+    public Query getReceiverMessageNotRead(String idChat, String idReciever)
+    {
+        //cuando concatenamos dos valors, en firestore debemos añadir indices para que nos devuelva valores y nos de esta respuesta verdadera
+        return mCollection.whereEqualTo("idChat", idChat).whereEqualTo("status", "ENVIADO").whereEqualTo("idReceiver",idReciever);
+    }
+
     public Query getLastMessage(String idChat)
     {
         //return last message that is created
