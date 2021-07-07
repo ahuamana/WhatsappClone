@@ -77,4 +77,12 @@ public class ChatsProvider {
 
 
     }
+
+    public Task<Void> updateWriting(String idChat, String idUser)
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("writing", idUser);
+
+        return mCollection.document(idChat).update(map);
+    }
 }

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.media.Image;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +41,8 @@ import com.paparazziteam.whatsappclone.providers.UsersProvider;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -52,6 +56,7 @@ public class ChatActivity extends AppCompatActivity {
     MessageProvider mMessageProvider;
 
     TextView mTextViewUsername;
+    TextView mTextViewOnline;
     CircleImageView mCircleImageUser;
 
     EditText mEditTextMessage;
@@ -61,6 +66,8 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView mRecyclerViewMessages;
 
     LinearLayoutManager mLinearLayoutManager;
+
+    Timer mTimer;
 
 
     @Override
@@ -92,6 +99,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
         checkIfExistChat();
+        setWriting();
 
 
         mImageViewSend.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +109,53 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setWriting() {
+        mEditTextMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            //SI ESTA ESCRIBIENDO
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(mExtraIdChat != null)
+                {
+                    mChatsProvider.updateWriting(mExtraIdChat,mAuthProvider.getID());//Update on firebase state
+                }
+
+
+
+            }
+
+            //SI EL USUARIO DEJO DE ESCRIBIR
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                mTimer = new Timer();
+                mTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+
+                        if(mTimer != null)
+                        {
+                            //if it's not writing after 1000 miliseconds
+                            if(mExtraIdChat != null)
+                            {
+                                mChatsProvider.updateWriting(mExtraIdChat,"");//Update on firebase state
+                                mTimer.cancel();
+                            }
+                        }
+
+
+                    }
+                }, 1000);
+
+            }
+        });
     }
 
     @Override
@@ -246,6 +301,7 @@ public class ChatActivity extends AppCompatActivity {
         chat.setId(mAuthProvider.getID() + mExtraIdUser);
         chat.setTimestamp(new Date().getTime());
         chat.setNumberMessages(0);
+        chat.setWriting("");
 
         ArrayList<String> ids = new ArrayList<>();
         ids.add(mAuthProvider.getID());
@@ -311,7 +367,7 @@ public class ChatActivity extends AppCompatActivity {
         ImageView imageViewBack = findViewById(R.id.imageViewBack);
         mTextViewUsername = findViewById(R.id.textviewUsername_chat);
         mCircleImageUser = findViewById(R.id.circleImageUser_chat);
-
+        mTextViewOnline = findViewById(R.id.textviewOnline_chat);
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
