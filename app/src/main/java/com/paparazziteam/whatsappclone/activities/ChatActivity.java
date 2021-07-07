@@ -152,7 +152,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
                     }
-                }, 1000);
+                }, 2000);
 
             }
         });
@@ -227,7 +227,44 @@ public class ChatActivity extends AppCompatActivity {
                          getMessagesByChat();
                          //Toast.makeText(ChatActivity.this, "EL chat entre estos dos usarios ya existe", Toast.LENGTH_SHORT).show();
                          updateStatusMessage();
+
+                         getChatInfo();
                         
+                    }
+                }
+
+            }
+        });
+    }
+
+    private void getChatInfo() {
+
+        mChatsProvider.getChatById(mExtraIdChat).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
+
+                if(value != null)
+                {
+                    if(value.exists())
+                    {
+                        Chat chat = value.toObject(Chat.class);
+                        if(chat.getWriting() != null)
+                        {
+                            if(!chat.getWriting().equals(""))
+                            {
+                                if(!chat.getWriting().equals(mAuthProvider.getID()))
+                                {
+                                    mTextViewOnline.setText("Escribiendo");
+
+                                }else
+                                {
+                                    mTextViewOnline.setText("");
+                                }
+                            }else
+                            {
+                                mTextViewOnline.setText("");
+                            }
+                        }
                     }
                 }
 
