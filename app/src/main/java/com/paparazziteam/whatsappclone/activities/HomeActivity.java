@@ -24,10 +24,12 @@ import com.paparazziteam.whatsappclone.fragments.ContacsFragment;
 import com.paparazziteam.whatsappclone.fragments.PhotoFragment;
 import com.paparazziteam.whatsappclone.fragments.StatusFragment;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
+import com.paparazziteam.whatsappclone.providers.UsersProvider;
 
 public class HomeActivity extends AppCompatActivity implements MaterialSearchBar.OnSearchActionListener {
 
     AuthProvider mAuthProvider;
+    UsersProvider mUsersProvider;
 
     MaterialSearchBar mSearchBar;
 
@@ -60,6 +62,7 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
         mContactsFragment = new ContacsFragment();
         mStatusFragment = new StatusFragment();
         mPhotoFratgment = new PhotoFragment();
+        mUsersProvider = new UsersProvider();
 
         adapter.addFragment(mPhotoFratgment, "");
         adapter.addFragment(mChatsFragment, "Chats");
@@ -124,6 +127,20 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
         startActivity(intent);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mUsersProvider.updateOnline(mAuthProvider.getID(), true);//State connected change to false == means online
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        mUsersProvider.updateOnline(mAuthProvider.getID(), false);//State connected change to false == means not online
+    }
+
     //Methos implemented from search bar
 
     @Override
@@ -140,4 +157,6 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
     public void onButtonClicked(int buttonCode) {
 
     }
+
+
 }

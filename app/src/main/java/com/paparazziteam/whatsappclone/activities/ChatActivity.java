@@ -39,6 +39,7 @@ import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ChatsProvider;
 import com.paparazziteam.whatsappclone.providers.MessageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
+import com.paparazziteam.whatsappclone.utils.RelativeTime;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -393,6 +394,17 @@ public class ChatActivity extends AppCompatActivity {
                                         .load(user.getImage())
                                         .into(mCircleImageUser);
                             }
+                        }
+                        if(user.isOnline())
+                        {
+                            mTextViewOnline.setText("En Linea");
+                        } else {
+                            String relativeTime = RelativeTime.getTimeAgo(user.getLastConnect(), ChatActivity.this); //create relative time from last connected
+                           if(relativeTime != null)
+                           {
+                               mTextViewOnline.setText(relativeTime);
+                           }
+
                         }
                     }
                 }

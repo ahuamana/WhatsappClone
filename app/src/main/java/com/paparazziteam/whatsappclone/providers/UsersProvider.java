@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.paparazziteam.whatsappclone.models.User;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,5 +65,13 @@ public class UsersProvider {
         Map<String, Object> map = new HashMap<>();
         map.put("info",info);
         return mCollection.document(id).update(map);
+    }
+
+    public Task<Void> updateOnline(String idUser, boolean status)
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("online",status);  // update status connected
+        map.put("lastConnect", new Date().getTime()); //update status from last connected
+        return mCollection.document(idUser).update(map);
     }
 }
