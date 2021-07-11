@@ -25,6 +25,7 @@ import com.paparazziteam.whatsappclone.fragments.PhotoFragment;
 import com.paparazziteam.whatsappclone.fragments.StatusFragment;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
+import com.paparazziteam.whatsappclone.utils.AppBackgroundHelper;
 
 public class HomeActivity extends AppCompatActivity implements MaterialSearchBar.OnSearchActionListener {
 
@@ -131,14 +132,15 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
     protected void onStart() {
         super.onStart();
 
-        mUsersProvider.updateOnline(mAuthProvider.getID(), true);//State connected change to false == means online
+        AppBackgroundHelper.setOnline(HomeActivity.this, true);//State connected change to false == means online
+       //mUsersProvider.updateOnline(mAuthProvider.getID(), true);//State connected change to false == means online
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        mUsersProvider.updateOnline(mAuthProvider.getID(), false);//State connected change to false == means not online
+        AppBackgroundHelper.setOnline(HomeActivity.this, false);//State connected change to false == means online
+        //mUsersProvider.updateOnline(mAuthProvider.getID(), false);//State connected change to false == means not online
     }
 
     //Methos implemented from search bar

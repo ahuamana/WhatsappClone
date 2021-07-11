@@ -12,14 +12,26 @@ import java.util.List;
 public class AppBackgroundHelper {
 
 
-    public static void online(Context context, boolean status)
+    public static void setOnline(Context context, boolean status)
     {
         UsersProvider usersProvider = new UsersProvider();
         AuthProvider authProvider = new AuthProvider();
 
+        if(authProvider!= null)
+        {
+            if(isApplicationSentToBackground(context))
+            {
+                usersProvider.updateOnline(authProvider.getID(), status);
+            }else
+            {
+                if(status)
+                {
+                    usersProvider.updateOnline(authProvider.getID(), status);
+                }
+            }
+        }
 
 
-        usersProvider.updateOnline(authProvider.getID(), status);
     }
 
     //with this class will know if user minimize the app
