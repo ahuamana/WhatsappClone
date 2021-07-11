@@ -83,8 +83,37 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
 
         getMessagesNotRead(holder,chat.getId());
 
+
+        setWriting(holder, chat);
+
         myViewClick(holder, idUser, chat);
 
+
+
+    }
+
+    private void setWriting(viewHolder holder, Chat chat) {
+
+        if(chat.getWriting() != null)
+        {
+            if(!chat.getWriting().equals(""))
+            {
+                    if(!chat.getWriting().equals(authProvider.getID()))
+                {
+                    holder.textViewWriting.setVisibility(View.VISIBLE);
+                    holder.textViewLastMessage.setVisibility(View.GONE);
+
+                }else
+                {
+                    holder.textViewWriting.setVisibility(View.GONE);
+                    holder.textViewLastMessage.setVisibility(View.VISIBLE);
+                }
+            }else
+            {
+                holder.textViewWriting.setVisibility(View.GONE);
+                holder.textViewLastMessage.setVisibility(View.VISIBLE);
+            }
+        }
 
     }
 
@@ -250,6 +279,7 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
         View myView;
         FrameLayout frameLayoutMessagesNotRead;
         TextView textViewMessagesNotRead;
+        TextView textViewWriting;
 
         public  viewHolder(View view)
         {
@@ -262,6 +292,7 @@ public class ChatsAdapter extends FirestoreRecyclerAdapter<Chat, ChatsAdapter.vi
             circleImageViewUser = view.findViewById(R.id.circleImageUser_chat_adapter);
             frameLayoutMessagesNotRead = view.findViewById(R.id.frameLayoutMessagesNotRead);
             textViewMessagesNotRead = view.findViewById(R.id.textViewMessagesNotRead);
+            textViewWriting = view.findViewById(R.id.textViewWriting_chat_adapter);
 
         }
 

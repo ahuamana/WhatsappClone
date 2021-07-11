@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.paparazziteam.whatsappclone.R;
@@ -68,6 +69,8 @@ public class ChatActivity extends AppCompatActivity {
     LinearLayoutManager mLinearLayoutManager;
 
     Timer mTimer;
+
+    ListenerRegistration mListenerChat;
 
 
     @Override
@@ -176,6 +179,16 @@ public class ChatActivity extends AppCompatActivity {
          mAdapter.stopListening();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(mListenerChat != null)
+        {
+            mListenerChat.remove();
+        }
+    }
+
     private void createMessage() {
         String textMessage = mEditTextMessage.getText().toString();
 
@@ -239,7 +252,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void getChatInfo() {
 
-        mChatsProvider.getChatById(mExtraIdChat).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        mListenerChat = mChatsProvider.getChatById(mExtraIdChat).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
 
