@@ -74,6 +74,7 @@ public class ChatActivity extends AppCompatActivity {
 
     ListenerRegistration mListenerChat;
 
+    User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,11 +277,46 @@ public class ChatActivity extends AppCompatActivity {
 
                                 }else
                                 {
-                                    mTextViewOnline.setText("");
+                                    if(mUser != null)
+                                    {
+                                        if(mUser.isOnline())
+                                        {
+                                            mTextViewOnline.setText("En Linea");
+                                        } else {
+                                            String relativeTime = RelativeTime.getTimeAgo(mUser.getLastConnect(), ChatActivity.this); //create relative time from last connected
+                                            if(relativeTime != null)
+                                            {
+                                                mTextViewOnline.setText(relativeTime);
+                                            }
+
+                                        }
+
+                                    }else
+                                    {
+                                        mTextViewOnline.setText("");
+                                    }
+
                                 }
                             }else
                             {
-                                mTextViewOnline.setText("");
+                                if(mUser != null)
+                                {
+                                    if(mUser.isOnline())
+                                    {
+                                        mTextViewOnline.setText("En Linea");
+                                    } else {
+                                        String relativeTime = RelativeTime.getTimeAgo(mUser.getLastConnect(), ChatActivity.this); //create relative time from last connected
+                                        if(relativeTime != null)
+                                        {
+                                            mTextViewOnline.setText(relativeTime);
+                                        }
+
+                                    }
+
+                                }else
+                                {
+                                    mTextViewOnline.setText("");
+                                }
                             }
                         }
                     }
@@ -387,23 +423,23 @@ public class ChatActivity extends AppCompatActivity {
                 {
                     if(documentSnapshot.exists())
                     {
-                        User user = documentSnapshot.toObject(User.class);
-                        mTextViewUsername.setText(user.getUsername());
+                        mUser = documentSnapshot.toObject(User.class);
+                        mTextViewUsername.setText(mUser.getUsername());
 
-                        if(user.getImage() !=null)
+                        if(mUser.getImage() !=null)
                         {
-                            if(!user.getImage().equals(""))
+                            if(!mUser.getImage().equals(""))
                             {
                                 Glide.with(ChatActivity.this)
-                                        .load(user.getImage())
+                                        .load(mUser.getImage())
                                         .into(mCircleImageUser);
                             }
                         }
-                        if(user.isOnline())
+                        if(mUser.isOnline())
                         {
                             mTextViewOnline.setText("En Linea");
                         } else {
-                            String relativeTime = RelativeTime.getTimeAgo(user.getLastConnect(), ChatActivity.this); //create relative time from last connected
+                            String relativeTime = RelativeTime.getTimeAgo(mUser.getLastConnect(), ChatActivity.this); //create relative time from last connected
                            if(relativeTime != null)
                            {
                                mTextViewOnline.setText(relativeTime);
