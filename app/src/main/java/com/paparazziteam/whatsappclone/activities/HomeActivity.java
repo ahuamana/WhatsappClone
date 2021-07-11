@@ -132,8 +132,8 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
     protected void onStart() {
         super.onStart();
 
-        AppBackgroundHelper.setOnline(HomeActivity.this, true);//State connected change to false == means online
-       //mUsersProvider.updateOnline(mAuthProvider.getID(), true);//State connected change to false == means online
+        AppBackgroundHelper.setOnline(HomeActivity.this, true);//State connected change to true == means online
+       //mUsersProvider.updateOnline(mAuthProvider.getID(), true);//State connected change to true == means online
     }
 
     @Override

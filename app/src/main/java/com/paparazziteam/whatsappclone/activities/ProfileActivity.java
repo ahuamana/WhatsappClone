@@ -38,6 +38,7 @@ import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ImageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
+import com.paparazziteam.whatsappclone.utils.AppBackgroundHelper;
 import com.paparazziteam.whatsappclone.utils.Mytoolbar;
 
 import java.io.File;
@@ -130,6 +131,20 @@ public class ProfileActivity extends AppCompatActivity {
 
         getUserInfo();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        AppBackgroundHelper.setOnline(ProfileActivity.this, true);//State connected change to true == means online
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        AppBackgroundHelper.setOnline(ProfileActivity.this, false);//State connected change to false == means online
     }
 
     private void openBottomSheetInfo() {

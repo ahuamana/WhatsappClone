@@ -39,6 +39,7 @@ import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ChatsProvider;
 import com.paparazziteam.whatsappclone.providers.MessageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
+import com.paparazziteam.whatsappclone.utils.AppBackgroundHelper;
 import com.paparazziteam.whatsappclone.utils.RelativeTime;
 
 import java.util.ArrayList;
@@ -166,6 +167,8 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        AppBackgroundHelper.setOnline(ChatActivity.this, true);//State connected change to true == means online
+
         //al iniciar la pantalla este escuchara otra vez
         if(mAdapter!= null)
         {
@@ -178,6 +181,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onStop();
 
          mAdapter.stopListening();
+        AppBackgroundHelper.setOnline(ChatActivity.this, false);//State connected change to false == means online
     }
 
     @Override
