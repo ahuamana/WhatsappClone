@@ -181,7 +181,10 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-         mAdapter.stopListening();
+        if(mAdapter!= null)
+        {
+            mAdapter.stopListening();
+        }
         AppBackgroundHelper.setOnline(ChatActivity.this, false);//State connected change to false == means online
     }
 

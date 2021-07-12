@@ -63,7 +63,8 @@
                     android:id="@+id/imageViewCheck_chat_adapter"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@drawable/icon_double_check_blue"/>
+                    android:src="@drawable/icon_double_check_blue"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/textViewLastMessage_chat_adapter"
@@ -88,7 +89,8 @@
                 <FrameLayout
                     android:id="@+id/frameLayoutMessagesNotRead"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <View
                         android:layout_width="22dp"
