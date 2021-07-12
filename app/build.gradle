@@ -86,3 +86,7 @@ android {
     apply plugin: 'com.google.gms.google-services'
 
 }
+
+dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+}
