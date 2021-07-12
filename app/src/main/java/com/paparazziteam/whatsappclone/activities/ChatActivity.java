@@ -1,5 +1,6 @@
 package com.paparazziteam.whatsappclone.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,7 +8,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,6 +27,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.fxn.pix.Options;
+import com.fxn.pix.Pix;
+import com.fxn.utility.PermUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -42,6 +50,7 @@ import com.paparazziteam.whatsappclone.providers.UsersProvider;
 import com.paparazziteam.whatsappclone.utils.AppBackgroundHelper;
 import com.paparazziteam.whatsappclone.utils.RelativeTime;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
@@ -65,6 +74,8 @@ public class ChatActivity extends AppCompatActivity {
     EditText mEditTextMessage;
     ImageView mImageViewSend;
 
+    ImageView mImageViewSelectPictures;
+
     MessageAdapter mAdapter;
     RecyclerView mRecyclerViewMessages;
 
@@ -75,6 +86,9 @@ public class ChatActivity extends AppCompatActivity {
     ListenerRegistration mListenerChat;
 
     User mUser;
+
+    Options mOptions;
+    ArrayList<String> mReturnValues = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +108,19 @@ public class ChatActivity extends AppCompatActivity {
         mEditTextMessage = findViewById(R.id.editTextMessage);
         mImageViewSend = findViewById(R.id.imageViewSend);
         mRecyclerViewMessages = findViewById(R.id.recyclerViewMessages);
+        mImageViewSelectPictures = findViewById(R.id.imageViewSelectPictures);
+
+        //ImagePicker
+        mOptions = Options.init()
+                .setRequestCode(100)                                           //Request code for activity results
+                .setCount(5)                                                   //Number of images to restict selection count
+                .setFrontfacing(false)                                         //Front Facing camera on start
+                .setPreSelectedUrls(mReturnValues)                               //Pre selected Image Urls
+                .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
+                .setMode(Options.Mode.Picture)                                     //Option to select only pictures or videos or both
+                .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
+                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
+                .setPath("/pix/images");                                       //Custom Path For media Storage
 
         mLinearLayoutManager = new LinearLayoutManager(ChatActivity.this);
         mLinearLayoutManager.setStackFromEnd(true);//messages on recycler  put over keyboard
@@ -112,6 +139,13 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createMessage();
+            }
+        });
+
+        mImageViewSelectPictures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startPix();
             }
         });
 
@@ -480,5 +514,57 @@ public class ChatActivity extends AppCompatActivity {
                 finish();//on esto nos permitira ir hacia atras
             }
         });
+    }
+
+    private void startPix() {
+        Pix.start(ChatActivity.this, mOptions);
+    }
+
+
+    //fetch only one image for camera
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+
+        if (resultCode != RESULT_CANCELED)
+        {
+            if (data != null)
+            {
+                if (resultCode == Activity.RESULT_OK && requestCode == 100)
+                {
+                    //Log.e("DATA INGRESASTE: ", "RequestCode: " + requestCode + " & resultacode: "+resultCode);
+                    mReturnValues = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+                    Intent intent = new Intent(ChatActivity.this, ConfirmImageSendActivity.class);
+                    intent.putExtra("data", mReturnValues);
+                    startActivity(intent);
+
+
+                } else {
+                    Toast.makeText(this, "error al seleccionar la foto", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }else { Toast.makeText(this, "operacion Cancelado!", Toast.LENGTH_SHORT).show(); }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //set permission to use camera
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Pix.start(ChatActivity.this, mOptions);
+                } else {
+                    Toast.makeText(ChatActivity.this, "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+        }
     }
 }

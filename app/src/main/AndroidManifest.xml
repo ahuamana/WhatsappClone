@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone"
         tools:replace="android:theme">
-        <activity android:name=".activities.ChatActivity"></activity>
+        <activity android:name=".activities.ConfirmImageSendActivity"></activity>
+        <activity android:name=".activities.ChatActivity" />
         <activity
             android:name=".activities.ProfileActivity"
             android:parentActivityName=".activities.HomeActivity" />

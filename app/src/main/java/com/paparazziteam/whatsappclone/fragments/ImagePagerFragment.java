@@ -42,6 +42,9 @@ public class ImagePagerFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_image_pager, container, false);
 
         mCardViewOptions = mView.findViewById(R.id.cardViewOptionsXML);
+        mCardViewOptions.setMaxCardElevation(mCardViewOptions.getCardElevation() * CardAdapter.MAX_ELEVATION_FACTOR);
+
+        
 
 
         return mView;
