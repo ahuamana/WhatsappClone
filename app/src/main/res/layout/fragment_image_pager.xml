@@ -13,14 +13,14 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/ic_arrow_back_white"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"/>
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"/>
 
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:orientation="vertical"
-       >
+       android:padding="15dp">
 
        <ImageView
            android:id="@+id/imageViewPicture_image_pager"
