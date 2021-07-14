@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.interfaces.CardAdapter;
@@ -25,6 +26,8 @@ public class ImagePagerFragment extends Fragment {
     ImageView mImageViewPicture;
     ImageView mImageViewBack;
 
+    LinearLayout mLinearLayoutImagePager;
+
     public ImagePagerFragment() {
         // Required empty public constructor
     }
@@ -32,11 +35,13 @@ public class ImagePagerFragment extends Fragment {
 
 
 
-    public static Fragment newInstance(int position, String imagePath) {
+    public static Fragment newInstance(int position, String imagePath, int size) {
         ImagePagerFragment fragment = new ImagePagerFragment();
         Bundle args = new Bundle();
         args.putInt("position", position); // to know in which current fragment is the user
+        args.putInt("size", size);
         args.putString("image", imagePath);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,9 +58,22 @@ public class ImagePagerFragment extends Fragment {
         mCardViewOptions.setMaxCardElevation(mCardViewOptions.getCardElevation() * CardAdapter.MAX_ELEVATION_FACTOR);
         mImageViewPicture = mView.findViewById(R.id.imageViewPicture_image_pager);
         mImageViewBack = mView.findViewById(R.id.imageViewBack_image_pager);
+        mLinearLayoutImagePager = mView.findViewById(R.id.linearLayoutViewPager);
 
 
         String imagePath = getArguments().getString("image");//get arguments from constructor
+        int size = getArguments().getInt("size");//get arguments from constructor
+
+
+        if(size == 1)
+        {
+            //Remove paddings from linear layout when you set 1 image
+            mLinearLayoutImagePager.setPadding(0,0,0,0);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mImageViewBack.getLayoutParams();
+            params.leftMargin = 10;
+            params.topMargin = 35;
+
+        }
 
         if(imagePath != null)
         {

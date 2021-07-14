@@ -45,7 +45,7 @@ public class OptionsPagerAdapter extends FragmentStatePagerAdapter implements Ca
     @NotNull
     @Override
     public Fragment getItem(int position) {
-        return ImagePagerFragment.newInstance(position, data.get(position));
+        return ImagePagerFragment.newInstance(position, data.get(position), data.size());
     }
 
     @Override
