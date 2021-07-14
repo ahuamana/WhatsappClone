@@ -1,5 +1,6 @@
 package com.paparazziteam.whatsappclone.fragments;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -8,14 +9,19 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.interfaces.CardAdapter;
+
+import java.io.File;
 
 public class ImagePagerFragment extends Fragment {
 
     CardView mCardViewOptions;
     View mView;
+
+    ImageView mImageViewPicture;
 
     public ImagePagerFragment() {
         // Required empty public constructor
@@ -24,11 +30,11 @@ public class ImagePagerFragment extends Fragment {
 
 
 
-    public static Fragment newInstance(int position) {
+    public static Fragment newInstance(int position, String imagePath) {
         ImagePagerFragment fragment = new ImagePagerFragment();
         Bundle args = new Bundle();
         args.putInt("position", position); // to know in which current fragment is the user
-        //args.putString(ARG_PARAM2, param2);
+        args.putString("image", imagePath);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,8 +49,17 @@ public class ImagePagerFragment extends Fragment {
 
         mCardViewOptions = mView.findViewById(R.id.cardViewOptionsXML);
         mCardViewOptions.setMaxCardElevation(mCardViewOptions.getCardElevation() * CardAdapter.MAX_ELEVATION_FACTOR);
+        mImageViewPicture = mView.findViewById(R.id.imageViewPicture_image_pager);
 
-        
+
+        String imagePath = getArguments().getString("image");//get arguments from constructor
+
+        if(imagePath != null)
+        {
+            File file = new File(imagePath);
+            mImageViewPicture.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath())); // show image from string on image view
+        }
+
 
 
         return mView;

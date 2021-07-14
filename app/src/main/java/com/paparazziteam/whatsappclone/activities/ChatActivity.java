@@ -113,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         //ImagePicker
         mOptions = Options.init()
                 .setRequestCode(100)                                           //Request code for activity results
-                .setCount(5)                                                   //Number of images to restict selection count
+                .setCount(6)                                                   //Number of images to restict selection count
                 .setFrontfacing(false)                                         //Front Facing camera on start
                 .setPreSelectedUrls(mReturnValues)                               //Pre selected Image Urls
                 .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
