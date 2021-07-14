@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.paparazziteam.whatsappclone.R;
@@ -21,6 +22,7 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_image_send);
+        setStatusBarColor(); // apply color of status bar
 
         mViewPager = findViewById(R.id.viewPager_Image_Confirm);
 
@@ -47,5 +49,19 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
     public static float dpToPixels(int dp, Context context)
     {
         return dp * ( context.getResources().getDisplayMetrics().density);
+    }
+
+    private void setStatusBarColor ()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorFullblack, this.getTheme()));
+        }
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.colorFullblack));
+            }
+        }
     }
 }
