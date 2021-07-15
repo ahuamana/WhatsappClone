@@ -243,6 +243,7 @@ public class ChatActivity extends AppCompatActivity {
             message.setIdReceiver(mExtraIdUser);
             message.setMessage(textMessage);
             message.setStatus("ENVIADO");
+            message.setType("texto");
             message.setTimestamp(new Date().getTime());
 
             mMessageProvider.create(message).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -536,6 +537,8 @@ public class ChatActivity extends AppCompatActivity {
                     mReturnValues = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
                     Intent intent = new Intent(ChatActivity.this, ConfirmImageSendActivity.class);
                     intent.putExtra("data", mReturnValues);
+                    intent.putExtra("idChat", mExtraIdChat);
+                    intent.putExtra("idReceiver", mExtraIdUser);
                     startActivity(intent);
 
 

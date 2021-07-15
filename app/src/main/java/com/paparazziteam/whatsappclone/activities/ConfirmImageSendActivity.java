@@ -9,14 +9,22 @@ import android.os.Bundle;
 
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.adapters.OptionsPagerAdapter;
+import com.paparazziteam.whatsappclone.models.Message;
+import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.utils.ShadowTransformer;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ConfirmImageSendActivity extends AppCompatActivity {
 
     ViewPager mViewPager;
+    String mExtraIdChat;
+    String mExtraIdReceiver;
     ArrayList<String> data;
+    ArrayList<Message> messages;
+
+    AuthProvider mAuthProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +34,31 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
 
         mViewPager = findViewById(R.id.viewPager_Image_Confirm);
 
+        mAuthProvider = new AuthProvider();
+
 
         data = getIntent().getStringArrayListExtra("data");
+        mExtraIdChat = getIntent().getStringExtra("idChat");
+        mExtraIdReceiver = getIntent().getStringExtra("idReceiver");
+
+        if(data != null)
+        {
+            for (int i = 0 ;  i < data.size(); i++)
+            {
+                Message m = new Message();
+                m.setIdChat(mExtraIdChat);
+                m.setIdSender(mAuthProvider.getID());
+                m.setIdReceiver(mExtraIdReceiver);
+                m.setStatus("ENVIADO");
+                m.setTimestamp(new Date().getTime());
+                m.setType("imagen");
+                m.setUrl(data.get(i));
+                m.setMessage("\uD83D\uDCF7 imagen");
+
+                messages.add(m);
+            }
+
+        }
 
 
         //
@@ -45,6 +76,12 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
 
 
     }
+
+    public void setMessage(int position, String message)
+    {
+        messages.get(position).setMessage(message);
+    }
+
 
     public static float dpToPixels(int dp, Context context)
     {

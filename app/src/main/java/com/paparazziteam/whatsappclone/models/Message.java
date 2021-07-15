@@ -8,18 +8,23 @@ public class Message {
     private String idChat;
     private String message;
     private String status;
+    private String url;
+    private String type;
+
     private Long timestamp;
 
     public Message() {
     }
 
-    public Message(String id, String idSender, String idReceiver, String idChat, String message, String status, Long timestamp) {
+    public Message(String id, String idSender, String idReceiver, String idChat, String message, String status, String url, String type, Long timestamp) {
         this.id = id;
         this.idSender = idSender;
         this.idReceiver = idReceiver;
         this.idChat = idChat;
         this.message = message;
         this.status = status;
+        this.url = url;
+        this.type = type;
         this.timestamp = timestamp;
     }
 
@@ -69,6 +74,22 @@ public class Message {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Long getTimestamp() {

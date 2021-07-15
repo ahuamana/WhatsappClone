@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -27,6 +28,8 @@ public class ImagePagerFragment extends Fragment {
     ImageView mImageViewBack;
 
     LinearLayout mLinearLayoutImagePager;
+
+    EditText mEditTextComment;
 
     public ImagePagerFragment() {
         // Required empty public constructor
@@ -59,6 +62,7 @@ public class ImagePagerFragment extends Fragment {
         mImageViewPicture = mView.findViewById(R.id.imageViewPicture_image_pager);
         mImageViewBack = mView.findViewById(R.id.imageViewBack_image_pager);
         mLinearLayoutImagePager = mView.findViewById(R.id.linearLayoutViewPager);
+        mEditTextComment = mView.findViewById(R.id.editTextComment_image_pager);
 
 
         String imagePath = getArguments().getString("image");//get arguments from constructor
