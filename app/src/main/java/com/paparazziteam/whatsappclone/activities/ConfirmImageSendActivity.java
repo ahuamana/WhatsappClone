@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.adapters.OptionsPagerAdapter;
@@ -22,7 +23,7 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
     String mExtraIdChat;
     String mExtraIdReceiver;
     ArrayList<String> data;
-    ArrayList<Message> messages;
+    ArrayList<Message> messages = new ArrayList<>();
 
     AuthProvider mAuthProvider;
 
@@ -75,6 +76,14 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
         mViewPager.setPageTransformer(false, transformer);
 
 
+    }
+
+    public void send()
+    {
+        for(int i = 0; i < data.size() ; i++)
+        {
+            Log.e("PRUEBA","Comentario: "+ messages.get(i).getMessage());
+        }
     }
 
     public void setMessage(int position, String message)
