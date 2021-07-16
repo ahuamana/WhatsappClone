@@ -99,4 +99,18 @@ public class Message {
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "idSender='" + idSender + '\'' +
+                ", idReceiver='" + idReceiver + '\'' +
+                ", idChat='" + idChat + '\'' +
+                ", message='" + message + '\'' +
+                ", status='" + status + '\'' +
+                ", url='" + url + '\'' +
+                ", type='" + type + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

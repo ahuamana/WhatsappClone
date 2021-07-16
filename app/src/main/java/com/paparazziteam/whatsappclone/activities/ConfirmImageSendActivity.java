@@ -12,6 +12,7 @@ import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.adapters.OptionsPagerAdapter;
 import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
+import com.paparazziteam.whatsappclone.providers.ImageProvider;
 import com.paparazziteam.whatsappclone.utils.ShadowTransformer;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
     ArrayList<Message> messages = new ArrayList<>();
 
     AuthProvider mAuthProvider;
+    ImageProvider mImageProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.viewPager_Image_Confirm);
 
         mAuthProvider = new AuthProvider();
+        mImageProvider = new ImageProvider();
 
 
         data = getIntent().getStringArrayListExtra("data");
@@ -80,10 +83,13 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
 
     public void send()
     {
-        for(int i = 0; i < data.size() ; i++)
+        /*for(int i = 0; i < data.size() ; i++)
         {
-            Log.e("PRUEBA","Comentario: "+ messages.get(i).getMessage());
-        }
+            Log.e("PRUEBA","Comentario: "+ messages.get(i));
+        }*/
+
+        mImageProvider.uploadMultiple(ConfirmImageSendActivity.this,messages);
+        finish();//cerrar el view
     }
 
     public void setMessage(int position, String message)
