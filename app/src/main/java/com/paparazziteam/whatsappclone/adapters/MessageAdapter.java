@@ -110,10 +110,32 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
             }
 
 
+        showImage(holder, message);
+
+
 
 
     }
 
+    private void showImage(viewHolder holder, Message message) {
+
+        if(message.getType().equals("imagen"))
+        {
+            if(message.getUrl() != null)
+            {
+                if( !message.equals(""))
+                {
+                    holder.imageViewMessage.setVisibility(View.VISIBLE);
+                    Glide.with(context)
+                            .load(message.getUrl())
+                            .into(holder.imageViewMessage);
+                }else
+                {
+                    holder.textViewMessage.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
 
 
     public ListenerRegistration getListener()
@@ -135,6 +157,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
         TextView textViewMessage;
         TextView textViewDate;
         ImageView imageViewCheck;
+        ImageView imageViewMessage;
         View myView;
         LinearLayout linearLayoutMessage;
 
@@ -145,6 +168,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
             textViewMessage = view.findViewById(R.id.textViewMessage_message);
             textViewDate = view.findViewById(R.id.textViewDate_message);
             imageViewCheck = view.findViewById(R.id.imageViewCheck_message);
+            imageViewMessage = view.findViewById(R.id.imageViewMessage_message);
             linearLayoutMessage = view.findViewById(R.id.linearLayoutMessage_message);
 
         }
