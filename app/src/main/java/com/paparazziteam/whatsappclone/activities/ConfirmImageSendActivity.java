@@ -57,7 +57,7 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
                 m.setTimestamp(new Date().getTime());
                 m.setType("imagen");
                 m.setUrl(data.get(i));
-                m.setMessage("\uD83D\uDCF7 imagen");
+                m.setMessage("\uD83D\uDCF7imagen");
 
                 messages.add(m);
             }

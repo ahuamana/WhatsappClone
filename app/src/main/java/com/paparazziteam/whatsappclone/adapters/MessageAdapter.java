@@ -3,6 +3,7 @@ package com.paparazziteam.whatsappclone.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,22 +124,45 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
         {
             if(message.getUrl() != null)
             {
-                if( !message.equals(""))
+
+                Log.e("DATA","imagen no es nula" + message.getUrl());
+
+                if( !message.getUrl().equals(""))
                 {
+                    Log.e("DATA","imagen no esta vacia" + message.getUrl());
+
                     holder.imageViewMessage.setVisibility(View.VISIBLE);
                     Glide.with(context)
                             .load(message.getUrl())
                             .into(holder.imageViewMessage);
+
+                    ViewGroup.MarginLayoutParams marginDate = (ViewGroup.MarginLayoutParams) holder.textViewDate.getLayoutParams();
+                    ViewGroup.MarginLayoutParams marginCheck = (ViewGroup.MarginLayoutParams) holder.imageViewCheck.getLayoutParams();
+
+                    marginDate.topMargin =15;
+                    marginCheck.topMargin =15;
+
+                    Log.e("MARGIN","APPLIED");
+
+
                 }else
                 {
+                    Log.e("DATA","imagen Vacia" + message.getUrl());
+                    holder.imageViewMessage.setVisibility(View.GONE);
                     holder.textViewMessage.setVisibility(View.VISIBLE);
                 }
 
             } else
             {
+                Log.e("DATA","imagen es nula");
                 holder.imageViewMessage.setVisibility(View.GONE);
                 holder.textViewMessage.setVisibility(View.VISIBLE);
             }
+        }else
+        {
+            Log.e("DATA","no es una imagen");
+            holder.imageViewMessage.setVisibility(View.GONE);
+            holder.textViewMessage.setVisibility(View.VISIBLE);
         }
     }
 
