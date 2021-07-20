@@ -13,6 +13,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.paparazziteam.whatsappclone.models.Message;
+import com.paparazziteam.whatsappclone.utils.FileUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +39,7 @@ public class FilesProvider {
         for(int i=0; i< files.size(); i++)
         {
             Uri f = files.get(i); //this get the file name
-            StorageReference ref = mStorage.child(f.getLastPathSegment());
+            StorageReference ref = mStorage.child(FileUtil.getFileName(context,f));
             ref.putFile(f).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) {
@@ -58,7 +59,7 @@ public class FilesProvider {
                                 message.setUrl(url);
                                 message.setStatus("ENVIADO");
                                 message.setTimestamp(new Date().getTime());
-                                message.setMessage(f.getLastPathSegment());//this get the file name
+                                message.setMessage(FileUtil.getFileName(context,f));//this get the file name
 
                                 mMessageProvider.create(message);
                             }
