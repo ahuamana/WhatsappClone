@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -75,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
     ImageView mImageViewSend;
 
     ImageView mImageViewSelectPictures;
+    ImageView mImageViewSelectFiles;
 
     MessageAdapter mAdapter;
     RecyclerView mRecyclerViewMessages;
@@ -89,6 +91,8 @@ public class ChatActivity extends AppCompatActivity {
 
     Options mOptions;
     ArrayList<String> mReturnValues = new ArrayList<>();
+
+    final int ACTION_FILE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         mImageViewSend = findViewById(R.id.imageViewSend);
         mRecyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         mImageViewSelectPictures = findViewById(R.id.imageViewSelectPictures);
+        mImageViewSelectFiles = findViewById(R.id.imageViewSelectFiles);
 
         //ImagePicker
         mOptions = Options.init()
@@ -149,6 +154,41 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        mImageViewSelectFiles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectFiles();
+            }
+        });
+
+    }
+
+    private void selectFiles() {
+        String[] mimeTypes =
+                {"application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .doc & .docx
+                        "application/vnd.ms-powerpoint","application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
+                        "application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+                        "text/plain",
+                        "application/pdf",
+                        "application/zip"};
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.setType(mimeTypes.length == 1 ? mimeTypes[0] : "*/*");
+            if (mimeTypes.length > 0) {
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            }
+        } else {
+            String mimeTypesStr = "";
+            for (String mimeType : mimeTypes) {
+                mimeTypesStr += mimeType + "|";
+            }
+            intent.setType(mimeTypesStr.substring(0,mimeTypesStr.length() - 1));
+        }
+        startActivityForResult(Intent.createChooser(intent,"ChooseFile"), ACTION_FILE);
     }
 
     private void setWriting() {
