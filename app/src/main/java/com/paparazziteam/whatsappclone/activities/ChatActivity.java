@@ -588,8 +588,6 @@ public class ChatActivity extends AppCompatActivity {
                     startActivity(intent);
 
 
-                } else {
-                    Toast.makeText(this, "error al seleccionar la foto", Toast.LENGTH_SHORT).show();
                 }
 
                 if (requestCode == ACTION_FILE && resultCode == RESULT_OK)
