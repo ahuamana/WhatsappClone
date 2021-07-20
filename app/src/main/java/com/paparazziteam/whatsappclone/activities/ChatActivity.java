@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -93,6 +95,7 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<String> mReturnValues = new ArrayList<>();
 
     final int ACTION_FILE = 2;
+    ArrayList<Uri> mFileList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -584,6 +587,29 @@ public class ChatActivity extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(this, "error al seleccionar la foto", Toast.LENGTH_SHORT).show();
+                }
+
+                if (requestCode == ACTION_FILE && resultCode == RESULT_OK)
+                {
+                    mFileList = new ArrayList<>();
+                    ClipData clipData = data.getClipData();
+
+                    //Selecciono solo un archivo
+                    if(clipData == null)
+                    {
+                        Uri uri = data.getData();
+                        mFileList.add(uri);
+                    }else
+                    {
+                        //Seleeciono varios archivos
+                        int count = clipData.getItemCount();
+
+                        for(int i=0; i< count; i++)
+                        {
+                            Uri uri = clipData.getItemAt(i).getUri();
+                            mFileList.add(uri); // capturing data selected from user
+                        }
+                    }
                 }
             }
 
