@@ -48,6 +48,7 @@ import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ChatsProvider;
+import com.paparazziteam.whatsappclone.providers.FilesProvider;
 import com.paparazziteam.whatsappclone.providers.MessageProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
 import com.paparazziteam.whatsappclone.utils.AppBackgroundHelper;
@@ -96,6 +97,7 @@ public class ChatActivity extends AppCompatActivity {
 
     final int ACTION_FILE = 2;
     ArrayList<Uri> mFileList;
+    FilesProvider mFilesProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,7 @@ public class ChatActivity extends AppCompatActivity {
         mUsersProvider = new UsersProvider();
         mChatsProvider = new ChatsProvider();
         mMessageProvider = new MessageProvider();
+        mFilesProvider = new FilesProvider();
 
 
         mEditTextMessage = findViewById(R.id.editTextMessage);
@@ -610,6 +613,8 @@ public class ChatActivity extends AppCompatActivity {
                             mFileList.add(uri); // capturing selected data from user
                         }
                     }
+
+                    mFilesProvider.savaFiles(ChatActivity.this, mFileList,mExtraIdChat,mExtraIdUser);
                 }
             }
 

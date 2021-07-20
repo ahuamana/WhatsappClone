@@ -58,6 +58,7 @@ public class FilesProvider {
                                 message.setUrl(url);
                                 message.setStatus("ENVIADO");
                                 message.setTimestamp(new Date().getTime());
+                                message.setMessage(f.getLastPathSegment());//this get the file name
 
                                 mMessageProvider.create(message);
                             }
