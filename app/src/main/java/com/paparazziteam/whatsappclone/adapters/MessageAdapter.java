@@ -133,6 +133,11 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
                 {
                     holder.textViewMessage.setVisibility(View.VISIBLE);
                 }
+
+            } else
+            {
+                holder.imageViewMessage.setVisibility(View.GONE);
+                holder.textViewMessage.setVisibility(View.VISIBLE);
             }
         }
     }

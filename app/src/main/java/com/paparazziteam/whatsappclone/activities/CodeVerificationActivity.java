@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -25,6 +26,8 @@ import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
+
+import org.jetbrains.annotations.NotNull;
 
 public class CodeVerificationActivity extends AppCompatActivity {
 
@@ -176,6 +179,12 @@ public class CodeVerificationActivity extends AppCompatActivity {
                 }else {
                     Toast.makeText(CodeVerificationActivity.this, "No se pudo authenticar", Toast.LENGTH_SHORT).show();
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+
+                Toast.makeText(CodeVerificationActivity.this, ""+ e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
