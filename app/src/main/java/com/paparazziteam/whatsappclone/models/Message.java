@@ -10,13 +10,14 @@ public class Message {
     private String status;
     private String url;
     private String type;
+    private String fileName;
 
     private Long timestamp;
 
     public Message() {
     }
 
-    public Message(String id, String idSender, String idReceiver, String idChat, String message, String status, String url, String type, Long timestamp) {
+    public Message(String id, String idSender, String idReceiver, String idChat, String message, String status, String url, String type, String fileName, Long timestamp) {
         this.id = id;
         this.idSender = idSender;
         this.idReceiver = idReceiver;
@@ -25,6 +26,7 @@ public class Message {
         this.status = status;
         this.url = url;
         this.type = type;
+        this.fileName = fileName;
         this.timestamp = timestamp;
     }
 
@@ -90,6 +92,14 @@ public class Message {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public Long getTimestamp() {

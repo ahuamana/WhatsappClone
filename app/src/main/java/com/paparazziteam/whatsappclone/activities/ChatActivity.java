@@ -607,7 +607,7 @@ public class ChatActivity extends AppCompatActivity {
                         for(int i=0; i< count; i++)
                         {
                             Uri uri = clipData.getItemAt(i).getUri();
-                            mFileList.add(uri); // capturing data selected from user
+                            mFileList.add(uri); // capturing selected data from user
                         }
                     }
                 }
