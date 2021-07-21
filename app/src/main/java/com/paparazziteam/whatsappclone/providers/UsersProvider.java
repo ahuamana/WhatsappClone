@@ -48,7 +48,7 @@ public class UsersProvider {
                     String token = task.getResult();
 
                     Map<String, Object> map = new HashMap<>();
-                    map.put("username",token);
+                    map.put("token",token);
                     mCollection.document(idUser).update(map);
                 }
             }
