@@ -1,8 +1,10 @@
 package com.paparazziteam.whatsappclone.adapters;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,8 @@ import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
 import com.paparazziteam.whatsappclone.utils.RelativeTime;
 
+import java.io.File;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAdapter.viewHolder > {
@@ -42,6 +46,8 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
     User user;
 
     ListenerRegistration listener;
+
+
 
 
     public MessageAdapter(@NonNull FirestoreRecyclerOptions options, Context context) {
@@ -113,9 +119,58 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
 
         showImage(holder, message);
 
+        showDocument(holder,message);
 
+        openMessage(holder, message);
+    }
 
+    private void openMessage(viewHolder holder, Message message) {
 
+        holder.myView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(message.getType().equals("documento"))
+                {
+                    //To download files locally
+                    File file = new File(context.getExternalCacheDir(),"file");
+
+                    DownloadManager.Request request= new DownloadManager.Request(Uri.parse(message.getUrl()))
+                            .setTitle(message.getMessage())
+                            .setDescription("Download")
+                            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                            .setDestinationUri(Uri.fromFile(file))
+                            .setAllowedOverMetered(true)
+                            .setAllowedOverRoaming(true);
+
+                    DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                    downloadManager.enqueue(request);//Start Downloading
+                }
+            }
+        });
+    }
+
+    private void showDocument(viewHolder holder, Message message) {
+
+        if(message.getType().equals("documento"))
+        {
+            if(message.getUrl() != null)
+            {
+                if(!message.getUrl().equals(""))
+                {
+                    holder.linearLayoutDocument.setVisibility(View.VISIBLE);
+                }else
+                {
+                    holder.linearLayoutDocument.setVisibility(View.GONE);
+                }
+            }else
+            {
+                holder.linearLayoutDocument.setVisibility(View.GONE);
+            }
+        }else
+        {
+            holder.linearLayoutDocument.setVisibility(View.GONE);
+        }
     }
 
     private void showImage(viewHolder holder, Message message) {
@@ -188,7 +243,9 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
         ImageView imageViewCheck;
         ImageView imageViewMessage;
         View myView;
+
         LinearLayout linearLayoutMessage;
+        LinearLayout linearLayoutDocument;
 
         public  viewHolder(View view)
         {
@@ -199,6 +256,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
             imageViewCheck = view.findViewById(R.id.imageViewCheck_message);
             imageViewMessage = view.findViewById(R.id.imageViewMessage_message);
             linearLayoutMessage = view.findViewById(R.id.linearLayoutMessage_message);
+            linearLayoutDocument = view.findViewById(R.id.linearLayoutDocument);
 
         }
 
