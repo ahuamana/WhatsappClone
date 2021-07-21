@@ -1,11 +1,17 @@
 package com.paparazziteam.whatsappclone.providers;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.paparazziteam.whatsappclone.models.User;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +35,24 @@ public class UsersProvider {
     public Task<Void> create(User user)
     {
         return mCollection.document(user.getId()).set(user);
+    }
+
+    public void createToken(String idUser)
+    {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<String> task) {
+
+                if(task.isSuccessful())
+                {
+                    String token = task.getResult();
+
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("username",token);
+                    mCollection.document(idUser).update(map);
+                }
+            }
+        });
     }
 
     public Task<Void> update(User user)

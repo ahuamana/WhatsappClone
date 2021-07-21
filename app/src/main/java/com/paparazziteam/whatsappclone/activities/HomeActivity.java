@@ -103,8 +103,13 @@ public class HomeActivity extends AppCompatActivity implements MaterialSearchBar
 
         mAuthProvider = new AuthProvider();
 
+        createToken();
 
+    }
 
+    private void createToken() {
+
+        mUsersProvider.createToken(mAuthProvider.getID());
     }
 
     private void goToProfile() {

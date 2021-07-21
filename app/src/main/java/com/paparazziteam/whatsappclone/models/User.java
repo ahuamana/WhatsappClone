@@ -7,18 +7,20 @@ public class User {
     private String phone;
     private String image;
     private String info;
+    private String token;
     private long lastConnect;
     private boolean online;
 
     public User() {
     }
 
-    public User(String id, String username, String phone, String image, String info, long lastConnect, boolean online) {
+    public User(String id, String username, String phone, String image, String info, String token, long lastConnect, boolean online) {
         this.id = id;
         this.username = username;
         this.phone = phone;
         this.image = image;
         this.info = info;
+        this.token = token;
         this.lastConnect = lastConnect;
         this.online = online;
     }
@@ -61,6 +63,14 @@ public class User {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public long getLastConnect() {
