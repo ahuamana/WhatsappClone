@@ -35,8 +35,15 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         if(title != null)
         {
-            //showNotification(title, body, idNotification);
-            showNotificationMessage(body,idNotification);
+            if(title.equals("NUEVO MENSAJE"))
+            {
+                showNotificationMessage(body,idNotification);
+            }else
+            {
+                showNotification(title, body, idNotification);
+            }
+
+
         }
 
     }
