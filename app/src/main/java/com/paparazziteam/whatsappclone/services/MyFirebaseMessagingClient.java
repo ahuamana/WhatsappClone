@@ -1,5 +1,7 @@
 package com.paparazziteam.whatsappclone.services;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
@@ -33,7 +35,8 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         if(title != null)
         {
-            showNotification(title, body, idNotification);
+            //showNotification(title, body, idNotification);
+            showNotificationMessage(body,idNotification);
         }
 
     }
@@ -49,7 +52,23 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         int id = Integer.parseInt(idNotification);
 
+        Log.e("NOTIFICATION","ID:" + id);
+        //the id is the position of notifications on the smarthphone
+        helper.getManager().notify(id,builder.build());
+    }
 
+    private void showNotificationMessage(String message, String idNotification) {
+
+        NotificationHelper helper = new NotificationHelper(getBaseContext());
+
+        NotificationCompat.Builder builder = helper.getNotificationMessage(message);
+
+        //Random random = new Random();
+        //int numeroRam = random.nextInt(10000);
+
+        int id = Integer.parseInt(idNotification);
+
+        Log.e("NOTIFICATION","ID:" + id);
         //the id is the position of notifications on the smarthphone
         helper.getManager().notify(id,builder.build());
     }

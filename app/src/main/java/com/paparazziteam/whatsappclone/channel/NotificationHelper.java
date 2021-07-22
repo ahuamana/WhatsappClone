@@ -10,8 +10,12 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.Person;
+import androidx.core.graphics.drawable.IconCompat;
 
 import com.paparazziteam.whatsappclone.R;
+
+import java.util.Date;
 
 public class NotificationHelper extends ContextWrapper {
 
@@ -69,5 +73,35 @@ public class NotificationHelper extends ContextWrapper {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body).setBigContentTitle(title));
     }
+
+    //Notifications with style of message
+    public NotificationCompat.Builder getNotificationMessage(String message)
+    {
+        Person myPerson = new Person.Builder()
+                .setName("Jhonathan")
+                .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
+                .build();
+
+        //User who recieve the message
+        Person receiverPerson = new Person.Builder()
+                .setName("Camila")
+                .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
+                .build();
+
+        NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle(receiverPerson);
+
+        NotificationCompat.MessagingStyle.Message messageNotification = new NotificationCompat.MessagingStyle.Message(
+                message,
+                new Date().getTime(),
+                receiverPerson //who will recieve the message
+        );
+
+        messagingStyle.addMessage(messageNotification);
+
+        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setStyle(messagingStyle);
+    }
+
 }
 
