@@ -336,36 +336,11 @@ public class ChatActivity extends AppCompatActivity {
         Map<String, String> data = new HashMap<>();
         data.put("title","NUEVO MENSAJE");
         data.put("body", message);
-        data.put("idNotification", message);
+        data.put("idNotification", String.valueOf(mChat.getIdNotification()));
 
-        //ttl = in how many seconds this notification will send
 
-        FCMBody body = new FCMBody(mUser.getToken(),"high","4500s", data);
-        mNotificationProvider.sendNotification(body).enqueue(new Callback<FCMResponse>() {
-            @Override
-            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
 
-                if(response.body() != null)
-                {
-                    if(response.body().getSuccess() == 1)
-                    {
-                        Toast.makeText(ChatActivity.this, "Notificacion se envio correctamente!", Toast.LENGTH_SHORT).show();
-                    }else
-                    {
-                        Toast.makeText(ChatActivity.this, "Notificacion no se pudo enviar", Toast.LENGTH_SHORT).show();
-                    }
-                }else
-                {
-                    Toast.makeText(ChatActivity.this, "No hubo respuesta del servidor!", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<FCMResponse> call, Throwable t) {
-                Toast.makeText(ChatActivity.this, "Fallo la peticion con Retrofit: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        mNotificationProvider.send(ChatActivity.this, mUser.getToken(), data);
 
     }
 

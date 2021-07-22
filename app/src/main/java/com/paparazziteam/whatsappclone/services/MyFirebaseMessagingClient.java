@@ -29,24 +29,28 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         String title = data.get("title");
         String body = data.get("body");
+        String idNotification = data.get("idNotification");
 
         if(title != null)
         {
-            showNotification(title, body);
+            showNotification(title, body, idNotification);
         }
 
     }
 
-    private void showNotification(String title, String body) {
+    private void showNotification(String title, String body, String idNotification) {
 
         NotificationHelper helper = new NotificationHelper(getBaseContext());
 
         NotificationCompat.Builder builder = helper.getNotification(title,body);
 
-        Random random = new Random();
-        int numeroRam = random.nextInt(10000);
+        //Random random = new Random();
+        //int numeroRam = random.nextInt(10000);
+
+        int id = Integer.parseInt(idNotification);
+
 
         //the id is the position of notifications on the smarthphone
-        helper.getManager().notify(numeroRam,builder.build());
+        helper.getManager().notify(id,builder.build());
     }
 }
