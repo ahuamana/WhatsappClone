@@ -44,12 +44,15 @@ import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.adapters.ChatsAdapter;
 import com.paparazziteam.whatsappclone.adapters.MessageAdapter;
 import com.paparazziteam.whatsappclone.models.Chat;
+import com.paparazziteam.whatsappclone.models.FCMBody;
+import com.paparazziteam.whatsappclone.models.FCMResponse;
 import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ChatsProvider;
 import com.paparazziteam.whatsappclone.providers.FilesProvider;
 import com.paparazziteam.whatsappclone.providers.MessageProvider;
+import com.paparazziteam.whatsappclone.providers.NotificationProvider;
 import com.paparazziteam.whatsappclone.providers.UsersProvider;
 import com.paparazziteam.whatsappclone.utils.AppBackgroundHelper;
 import com.paparazziteam.whatsappclone.utils.RelativeTime;
@@ -57,10 +60,15 @@ import com.paparazziteam.whatsappclone.utils.RelativeTime;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -99,6 +107,8 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<Uri> mFileList;
     FilesProvider mFilesProvider;
 
+    NotificationProvider mNotificationProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +123,8 @@ public class ChatActivity extends AppCompatActivity {
         mChatsProvider = new ChatsProvider();
         mMessageProvider = new MessageProvider();
         mFilesProvider = new FilesProvider();
+
+        mNotificationProvider = new NotificationProvider();
 
 
         mEditTextMessage = findViewById(R.id.editTextMessage);
@@ -306,12 +318,52 @@ public class ChatActivity extends AppCompatActivity {
 
                     mChatsProvider.updateNumberMessages(mExtraIdChat);
 
+                    //send Notification
+                    sendNotification(message.getMessage());
+
                     Toast.makeText(ChatActivity.this, "El mensaje se envio correctamente", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
             Toast.makeText(this, "Ingresa el mensaje", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void sendNotification(String message) {
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title","NUEVO MENSAJE");
+        data.put("body", message);
+
+        //ttl = in how many seconds this notification will send
+
+        FCMBody body = new FCMBody(mUser.getToken(),"high","4500s", data);
+        mNotificationProvider.sendNotification(body).enqueue(new Callback<FCMResponse>() {
+            @Override
+            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+
+                if(response.body() != null)
+                {
+                    if(response.body().getSuccess() == 1)
+                    {
+                        Toast.makeText(ChatActivity.this, "Notificacion se envio correctamente!", Toast.LENGTH_SHORT).show();
+                    }else
+                    {
+                        Toast.makeText(ChatActivity.this, "Notificacion no se pudo enviar", Toast.LENGTH_SHORT).show();
+                    }
+                }else
+                {
+                    Toast.makeText(ChatActivity.this, "No hubo respuesta del servidor!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<FCMResponse> call, Throwable t) {
+                Toast.makeText(ChatActivity.this, "Fallo la peticion con Retrofit: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     private void checkIfExistChat() {
