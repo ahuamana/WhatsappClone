@@ -8,16 +8,18 @@ public class Chat {
     private long timestamp;
     private ArrayList<String> ids;
     private int numberMessages;
+    private int idNotification;
     private String writing;
 
     public Chat() {
     }
 
-    public Chat(String id, long timestamp, ArrayList<String> ids, int numberMessages, String writing) {
+    public Chat(String id, long timestamp, ArrayList<String> ids, int numberMessages, int idNotification, String writing) {
         this.id = id;
         this.timestamp = timestamp;
         this.ids = ids;
         this.numberMessages = numberMessages;
+        this.idNotification = idNotification;
         this.writing = writing;
     }
 
@@ -51,6 +53,14 @@ public class Chat {
 
     public void setNumberMessages(int numberMessages) {
         this.numberMessages = numberMessages;
+    }
+
+    public int getIdNotification() {
+        return idNotification;
+    }
+
+    public void setIdNotification(int idNotification) {
+        this.idNotification = idNotification;
     }
 
     public String getWriting() {

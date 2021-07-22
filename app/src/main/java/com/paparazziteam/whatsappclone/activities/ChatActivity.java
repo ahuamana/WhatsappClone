@@ -62,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -99,6 +100,7 @@ public class ChatActivity extends AppCompatActivity {
     ListenerRegistration mListenerChat;
 
     User mUser;
+    Chat mChat;
 
     Options mOptions;
     ArrayList<String> mReturnValues = new ArrayList<>();
@@ -334,6 +336,7 @@ public class ChatActivity extends AppCompatActivity {
         Map<String, String> data = new HashMap<>();
         data.put("title","NUEVO MENSAJE");
         data.put("body", message);
+        data.put("idNotification", message);
 
         //ttl = in how many seconds this notification will send
 
@@ -402,12 +405,12 @@ public class ChatActivity extends AppCompatActivity {
                 {
                     if(value.exists())
                     {
-                        Chat chat = value.toObject(Chat.class);
-                        if(chat.getWriting() != null)
+                        mChat = value.toObject(Chat.class);
+                        if(mChat.getWriting() != null)
                         {
-                            if(!chat.getWriting().equals(""))
+                            if(!mChat.getWriting().equals(""))
                             {
-                                if(!chat.getWriting().equals(mAuthProvider.getID()))
+                                if(!mChat.getWriting().equals(mAuthProvider.getID()))
                                 {
                                     mTextViewOnline.setText("Escribiendo");
 
@@ -524,21 +527,26 @@ public class ChatActivity extends AppCompatActivity {
 
     private void createChat() {
 
-        Chat chat = new Chat();
-        chat.setId(mAuthProvider.getID() + mExtraIdUser);
-        chat.setTimestamp(new Date().getTime());
-        chat.setNumberMessages(0);
-        chat.setWriting("");
+        Random random = new Random();
+        int numeroRam = random.nextInt(10000);
+
+        mChat = new Chat();
+
+        mChat.setId(mAuthProvider.getID() + mExtraIdUser);
+        mChat.setTimestamp(new Date().getTime());
+        mChat.setNumberMessages(0);
+        mChat.setWriting("");
+        mChat.setIdNotification(numeroRam);
 
         ArrayList<String> ids = new ArrayList<>();
         ids.add(mAuthProvider.getID());
         ids.add(mExtraIdUser);
 
-        chat.setIds(ids);
+        mChat.setIds(ids);
 
-        mExtraIdChat = chat.getId();
+        mExtraIdChat = mChat.getId();
 
-        mChatsProvider.create(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
+        mChatsProvider.create(mChat).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 getMessagesByChat();

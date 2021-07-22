@@ -10,6 +10,7 @@ import com.paparazziteam.whatsappclone.channel.NotificationHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Random;
 
 public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
@@ -42,6 +43,10 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = helper.getNotification(title,body);
 
-        helper.getManager().notify(1,builder.build());
+        Random random = new Random();
+        int numeroRam = random.nextInt(10000);
+
+        //the id is the position of notifications on the smarthphone
+        helper.getManager().notify(numeroRam,builder.build());
     }
 }
