@@ -13,8 +13,6 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +20,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,11 +38,8 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.paparazziteam.whatsappclone.R;
-import com.paparazziteam.whatsappclone.adapters.ChatsAdapter;
 import com.paparazziteam.whatsappclone.adapters.MessageAdapter;
 import com.paparazziteam.whatsappclone.models.Chat;
-import com.paparazziteam.whatsappclone.models.FCMBody;
-import com.paparazziteam.whatsappclone.models.FCMResponse;
 import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
@@ -57,7 +51,6 @@ import com.paparazziteam.whatsappclone.providers.UsersProvider;
 import com.paparazziteam.whatsappclone.utils.AppBackgroundHelper;
 import com.paparazziteam.whatsappclone.utils.RelativeTime;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,9 +60,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -99,7 +89,8 @@ public class ChatActivity extends AppCompatActivity {
 
     ListenerRegistration mListenerChat;
 
-    User mUser;
+    User mUserReceiver;
+    User mMyUser;
     Chat mChat;
 
     Options mOptions;
@@ -153,8 +144,9 @@ public class ChatActivity extends AppCompatActivity {
 
         showChatToolbar(R.layout.chat_toolbar);
         
-        getUserInfo();//Obtenemos todos los datos despues de showChatToolbar
+        getUserReceiverInfo();//Obtenemos todos los datos despues de showChatToolbar
 
+        getMyUserInfo();
 
         checkIfExistChat();
         setWriting();
@@ -334,13 +326,15 @@ public class ChatActivity extends AppCompatActivity {
     private void sendNotification(String message) {
 
         Map<String, String> data = new HashMap<>();
-        data.put("title","NUEVO MENSAJE");
+        data.put("title","MENSAJE");
         data.put("body", message);
         data.put("idNotification", String.valueOf(mChat.getIdNotification()));
+        data.put("usernameReceiver", mUserReceiver.getUsername());
+        data.put("usernameSender", mMyUser.getUsername());
 
 
 
-        mNotificationProvider.send(ChatActivity.this, mUser.getToken(), data);
+        mNotificationProvider.send(ChatActivity.this, mUserReceiver.getToken(), data);
 
     }
 
@@ -391,13 +385,13 @@ public class ChatActivity extends AppCompatActivity {
 
                                 }else
                                 {
-                                    if(mUser != null)
+                                    if(mUserReceiver != null)
                                     {
-                                        if(mUser.isOnline())
+                                        if(mUserReceiver.isOnline())
                                         {
                                             mTextViewOnline.setText("En Linea");
                                         } else {
-                                            String relativeTime = RelativeTime.getTimeAgo(mUser.getLastConnect(), ChatActivity.this); //create relative time from last connected
+                                            String relativeTime = RelativeTime.getTimeAgo(mUserReceiver.getLastConnect(), ChatActivity.this); //create relative time from last connected
                                             if(relativeTime != null)
                                             {
                                                 mTextViewOnline.setText(relativeTime);
@@ -413,13 +407,13 @@ public class ChatActivity extends AppCompatActivity {
                                 }
                             }else
                             {
-                                if(mUser != null)
+                                if(mUserReceiver != null)
                                 {
-                                    if(mUser.isOnline())
+                                    if(mUserReceiver.isOnline())
                                     {
                                         mTextViewOnline.setText("En Linea");
                                     } else {
-                                        String relativeTime = RelativeTime.getTimeAgo(mUser.getLastConnect(), ChatActivity.this); //create relative time from last connected
+                                        String relativeTime = RelativeTime.getTimeAgo(mUserReceiver.getLastConnect(), ChatActivity.this); //create relative time from last connected
                                         if(relativeTime != null)
                                         {
                                             mTextViewOnline.setText(relativeTime);
@@ -532,7 +526,23 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void getUserInfo() {
+    private void getMyUserInfo()
+    {
+        mUsersProvider.getUserInfo(mAuthProvider.getID()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                if(documentSnapshot.exists())
+                {
+                    mMyUser = documentSnapshot.toObject(User.class);
+
+                }
+
+            }
+        });
+    }
+
+    private void getUserReceiverInfo() {
 
         mUsersProvider.getUserInfo(mExtraIdUser).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -542,23 +552,23 @@ public class ChatActivity extends AppCompatActivity {
                 {
                     if(documentSnapshot.exists())
                     {
-                        mUser = documentSnapshot.toObject(User.class);
-                        mTextViewUsername.setText(mUser.getUsername());
+                        mUserReceiver = documentSnapshot.toObject(User.class);
+                        mTextViewUsername.setText(mUserReceiver.getUsername());
 
-                        if(mUser.getImage() !=null)
+                        if(mUserReceiver.getImage() !=null)
                         {
-                            if(!mUser.getImage().equals(""))
+                            if(!mUserReceiver.getImage().equals(""))
                             {
                                 Glide.with(ChatActivity.this)
-                                        .load(mUser.getImage())
+                                        .load(mUserReceiver.getImage())
                                         .into(mCircleImageUser);
                             }
                         }
-                        if(mUser.isOnline())
+                        if(mUserReceiver.isOnline())
                         {
                             mTextViewOnline.setText("En Linea");
                         } else {
-                            String relativeTime = RelativeTime.getTimeAgo(mUser.getLastConnect(), ChatActivity.this); //create relative time from last connected
+                            String relativeTime = RelativeTime.getTimeAgo(mUserReceiver.getLastConnect(), ChatActivity.this); //create relative time from last connected
                            if(relativeTime != null)
                            {
                                mTextViewOnline.setText(relativeTime);

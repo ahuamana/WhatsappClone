@@ -75,16 +75,17 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     //Notifications with style of message
-    public NotificationCompat.Builder getNotificationMessage(String message)
+    public NotificationCompat.Builder getNotificationMessage(String usernameReceiver, String usernameSender,String message)
     {
+        //User who send the message
         Person myPerson = new Person.Builder()
-                .setName("Jhonathan")
+                .setName(usernameSender)
                 .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
                 .build();
 
         //User who recieve the message
         Person receiverPerson = new Person.Builder()
-                .setName("Camila")
+                .setName(usernameReceiver)
                 .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
                 .build();
 

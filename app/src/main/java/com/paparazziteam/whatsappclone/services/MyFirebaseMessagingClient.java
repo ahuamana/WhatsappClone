@@ -35,9 +35,9 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         if(title != null)
         {
-            if(title.equals("NUEVO MENSAJE"))
+            if(title.equals("MENSAJE"))
             {
-                showNotificationMessage(body,idNotification);
+                showNotificationMessage(data);
             }else
             {
                 showNotification(title, body, idNotification);
@@ -64,11 +64,15 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         helper.getManager().notify(id,builder.build());
     }
 
-    private void showNotificationMessage(String message, String idNotification) {
+    private void showNotificationMessage(Map<String, String> data) {
+
+        String body = data.get("body");
+        String idNotification = data.get("idNotification");
+        String usernameSender = data.get("usernameSender");
+        String usernameReceiver = data.get("usernameReceiver");
 
         NotificationHelper helper = new NotificationHelper(getBaseContext());
-
-        NotificationCompat.Builder builder = helper.getNotificationMessage(message);
+        NotificationCompat.Builder builder = helper.getNotificationMessage(usernameSender,usernameReceiver,body);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
@@ -76,6 +80,8 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         int id = Integer.parseInt(idNotification);
 
         Log.e("NOTIFICATION","ID:" + id);
+        Log.e("NOTIFICATION","usernameSender:" + usernameSender);
+        Log.e("NOTIFICATION","usernameReceiver:" + usernameReceiver);
         //the id is the position of notifications on the smarthphone
         helper.getManager().notify(id,builder.build());
     }
