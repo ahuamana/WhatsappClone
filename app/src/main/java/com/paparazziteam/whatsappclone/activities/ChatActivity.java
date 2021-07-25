@@ -31,6 +31,7 @@ import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -53,6 +54,7 @@ import com.paparazziteam.whatsappclone.utils.AppBackgroundHelper;
 import com.paparazziteam.whatsappclone.utils.RelativeTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -344,7 +346,7 @@ public class ChatActivity extends AppCompatActivity {
                         messages.add(message);
                     }
 
-
+                    Collections.reverse(messages);//implemented code to will reverse the notifications we have
 
                     sendNotification(messages);
                 }
