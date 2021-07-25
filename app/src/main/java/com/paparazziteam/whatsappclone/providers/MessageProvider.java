@@ -29,6 +29,16 @@ public class MessageProvider {
         return mCollection.whereEqualTo("idChat", idChat).orderBy("timestamp", Query.Direction.ASCENDING);
     }
 
+    public Query getLastMessagesByChatAndSender(String idChat , String idSender)
+    {
+        return mCollection
+                .whereEqualTo("idChat", idChat)
+                .whereEqualTo("idSender", idSender)
+                .whereEqualTo("status","ENVIADO")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(5);
+    }
+
     public Task<Void> updateStatus(String idMessage, String status)
     {
         Map<String, Object> map = new HashMap<>();

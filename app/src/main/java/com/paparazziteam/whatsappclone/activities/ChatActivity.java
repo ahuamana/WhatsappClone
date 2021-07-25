@@ -37,6 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.adapters.MessageAdapter;
 import com.paparazziteam.whatsappclone.models.Chat;
@@ -313,7 +314,7 @@ public class ChatActivity extends AppCompatActivity {
                     mChatsProvider.updateNumberMessages(mExtraIdChat);
 
                     //send Notification
-                    sendNotification(message.getMessage());
+                    getLastMessages(message);
 
                     Toast.makeText(ChatActivity.this, "El mensaje se envio correctamente", Toast.LENGTH_SHORT).show();
                 }
@@ -323,14 +324,46 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void sendNotification(String message) {
+    private void getLastMessages( Message message)
+    {
+        mMessageProvider.getLastMessagesByChatAndSender(mExtraIdChat, mAuthProvider.getID()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                if(querySnapshot != null)
+                {
+                    ArrayList<Message> messages = new ArrayList<>();
+
+                    for(DocumentSnapshot document: querySnapshot.getDocuments())
+                    {
+                        Message m = document.toObject(Message.class);
+                        messages.add(m);
+                    }
+
+                    if(messages.size()==0)
+                    {
+                        messages.add(message);
+                    }
+
+                    sendNotification(messages);
+                }
+            }
+        });
+    }
+
+
+    private void sendNotification(ArrayList<Message> messages) {
 
         Map<String, String> data = new HashMap<>();
         data.put("title","MENSAJE");
-        data.put("body", message);
+        data.put("body", "texto mensaje");
         data.put("idNotification", String.valueOf(mChat.getIdNotification()));
         data.put("usernameReceiver", mUserReceiver.getUsername());
         data.put("usernameSender", mMyUser.getUsername());
+
+        Gson gson = new Gson();
+        String messagesJSON = gson.toJson(messages); // Arralist to json
+
+        data.put("messages", messagesJSON);
 
 
 
@@ -607,6 +640,10 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+
 
     private void startPix() {
         Pix.start(ChatActivity.this, mOptions);
