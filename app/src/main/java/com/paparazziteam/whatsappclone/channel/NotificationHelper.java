@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 
@@ -76,7 +77,11 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     //Notifications with style of message
-    public NotificationCompat.Builder getNotificationMessage(Message[] messages, String usernameReceiver, String usernameSender)
+    public NotificationCompat.Builder getNotificationMessage(
+            Message[] messages,
+            String usernameReceiver,
+            String usernameSender,
+            Bitmap bitmapReceiver)
     {
         //User who send the message
         Person myPerson = new Person.Builder()
@@ -84,11 +89,25 @@ public class NotificationHelper extends ContextWrapper {
                 .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
                 .build();
 
-        //User who recieve the message
-        Person receiverPerson = new Person.Builder()
-                .setName(usernameReceiver)
-                .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
-                .build();
+       Person receiverPerson= null;
+
+       if(bitmapReceiver == null)
+       {
+           //User who recieve the message
+           receiverPerson = new Person.Builder()
+                   .setName(usernameReceiver)
+                   .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
+                   .build();
+       } else
+       {
+           //User who recieve the message
+           receiverPerson = new Person.Builder()
+                   .setName(usernameReceiver)
+                   .setIcon(IconCompat.createWithBitmap(bitmapReceiver))
+                   .build();
+       }
+
+
 
         NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle(receiverPerson);
 

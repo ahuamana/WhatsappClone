@@ -1,10 +1,23 @@
 package com.paparazziteam.whatsappclone.services;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.common.collect.BiMap;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -35,11 +48,16 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         String body = data.get("body");
         String idNotification = data.get("idNotification");
 
+        Log.e("NOTIFICATION","title:" + title);
+
         if(title != null)
         {
+
+
             if(title.equals("MENSAJE"))
             {
-                showNotificationMessage(data);
+                Log.e("NOTIFICATION","Mensaje con imagen");
+                getImageReceiver(data);
             }else
             {
                 showNotification(title, body, idNotification);
@@ -66,7 +84,41 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         helper.getManager().notify(id,builder.build());
     }
 
-    private void showNotificationMessage(Map<String, String> data) {
+    private void getImageReceiver(Map<String, String> data)
+    {
+        String imageReceiver = data.get("imageReceiver");
+
+        Log.e("NOTIFICATION","imageReceiver:" + imageReceiver);
+
+
+        //download image into bitmap
+        Glide.with(getApplicationContext())
+                .asBitmap()
+                .load(imageReceiver)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull @NotNull Bitmap resource, @Nullable @org.jetbrains.annotations.Nullable Transition<? super Bitmap> transition) {
+
+                        showNotificationMessage(data, resource);
+
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable @org.jetbrains.annotations.Nullable Drawable placeholder) {
+
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+
+                        showNotificationMessage(data, null);
+
+                    }
+                });
+    }
+
+    private void showNotificationMessage(Map<String, String> data, Bitmap bitmapReceiver) {
 
         String body = data.get("body");
         String idNotification = data.get("idNotification");
@@ -74,11 +126,16 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         String usernameReceiver = data.get("usernameReceiver");
         String messagesJSON = data.get("messagesJSON");
 
+
         Gson gson = new Gson();
         Message[] messages = gson.fromJson(messagesJSON, Message[].class);
 
         NotificationHelper helper = new NotificationHelper(getBaseContext());
-        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,usernameSender,usernameReceiver);
+
+
+
+
+        NotificationCompat.Builder builder = helper.getNotificationMessage(messages, usernameSender, usernameReceiver, bitmapReceiver);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
