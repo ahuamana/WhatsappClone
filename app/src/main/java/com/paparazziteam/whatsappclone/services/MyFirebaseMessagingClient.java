@@ -7,7 +7,9 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.channel.NotificationHelper;
+import com.paparazziteam.whatsappclone.models.Message;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -70,9 +72,13 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         String idNotification = data.get("idNotification");
         String usernameSender = data.get("usernameSender");
         String usernameReceiver = data.get("usernameReceiver");
+        String messagesJSON = data.get("messagesJSON");
+
+        Gson gson = new Gson();
+        Message[] messages = gson.fromJson(messagesJSON, Message[].class);
 
         NotificationHelper helper = new NotificationHelper(getBaseContext());
-        NotificationCompat.Builder builder = helper.getNotificationMessage(usernameSender,usernameReceiver,body);
+        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,usernameSender,usernameReceiver);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);

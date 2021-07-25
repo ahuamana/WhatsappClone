@@ -344,6 +344,8 @@ public class ChatActivity extends AppCompatActivity {
                         messages.add(message);
                     }
 
+
+
                     sendNotification(messages);
                 }
             }
@@ -363,7 +365,7 @@ public class ChatActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String messagesJSON = gson.toJson(messages); // Arralist to json
 
-        data.put("messages", messagesJSON);
+        data.put("messagesJSON", messagesJSON);
 
 
 

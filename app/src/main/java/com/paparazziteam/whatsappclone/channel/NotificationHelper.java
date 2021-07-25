@@ -14,6 +14,7 @@ import androidx.core.app.Person;
 import androidx.core.graphics.drawable.IconCompat;
 
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.models.Message;
 
 import java.util.Date;
 
@@ -75,7 +76,7 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     //Notifications with style of message
-    public NotificationCompat.Builder getNotificationMessage(String usernameReceiver, String usernameSender,String message)
+    public NotificationCompat.Builder getNotificationMessage(Message[] messages, String usernameReceiver, String usernameSender)
     {
         //User who send the message
         Person myPerson = new Person.Builder()
@@ -91,13 +92,23 @@ public class NotificationHelper extends ContextWrapper {
 
         NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle(receiverPerson);
 
-        NotificationCompat.MessagingStyle.Message messageNotification = new NotificationCompat.MessagingStyle.Message(
-                message,
-                new Date().getTime(),
-                receiverPerson //who will recieve the message
-        );
+        for(Message m: messages)
+        {
+            //this code is to add message to notification manager
+            NotificationCompat.MessagingStyle.Message messageNotification = new NotificationCompat.MessagingStyle.Message(
+                    m.getMessage(),
+                    m.getTimestamp(),
+                    receiverPerson //who will recieve the message
+            );
 
-        messagingStyle.addMessage(messageNotification);
+            messagingStyle.addMessage(messageNotification);
+
+        }
+
+
+
+
+
 
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
