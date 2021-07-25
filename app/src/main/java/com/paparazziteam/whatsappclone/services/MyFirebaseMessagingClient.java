@@ -90,6 +90,17 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         Log.e("NOTIFICATION","imageReceiver:" + imageReceiver);
 
+        if(imageReceiver == null)
+        {
+            showNotificationMessage(data,null);
+            return;
+        }
+
+        if(imageReceiver.equals(""))
+        {
+            showNotificationMessage(data,null);
+            return;
+        }
 
         //download image into bitmap
         Glide.with(getApplicationContext())
