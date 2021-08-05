@@ -1,5 +1,7 @@
 package com.paparazziteam.whatsappclone.services;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -7,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.RemoteInput;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -21,8 +24,10 @@ import com.google.common.collect.BiMap;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.channel.NotificationHelper;
 import com.paparazziteam.whatsappclone.models.Message;
+import com.paparazziteam.whatsappclone.receivers.ResponseReceiver;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +35,9 @@ import java.util.Map;
 import java.util.Random;
 
 public class MyFirebaseMessagingClient extends FirebaseMessagingService {
+
+
+    public static final String NOTIFICATION_REPLY = "NotificationReply";
 
     //Servira para enviar token de notificaciones de dispositivo a dispositivo
     @Override
@@ -143,10 +151,20 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         NotificationHelper helper = new NotificationHelper(getBaseContext());
 
+        //Action on Notifications
+        Intent intentResponse = new Intent(this, ResponseReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intentResponse,PendingIntent.FLAG_UPDATE_CURRENT);
+        RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY).setLabel("Tu mensaje...").build();
 
+        ////Data for action on notifications
+        NotificationCompat.Action actionResponse = new NotificationCompat.Action.Builder(
+                R.mipmap.ic_launcher,
+                "Responder",
+                pendingIntent)
+                .addRemoteInput(remoteInput)
+                .build();
 
-
-        NotificationCompat.Builder builder = helper.getNotificationMessage(messages, usernameSender, usernameReceiver, bitmapReceiver);
+        NotificationCompat.Builder builder = helper.getNotificationMessage(messages, usernameSender, usernameReceiver, bitmapReceiver,actionResponse);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
