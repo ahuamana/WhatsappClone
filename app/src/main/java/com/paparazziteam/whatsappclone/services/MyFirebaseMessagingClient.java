@@ -175,7 +175,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
                 .addRemoteInput(remoteInput)
                 .build();
 
-        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,"", usernameSender, usernameReceiver, bitmapReceiver,actionResponse);
+        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,"", usernameSender, usernameReceiver, bitmapReceiver, null,actionResponse);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
