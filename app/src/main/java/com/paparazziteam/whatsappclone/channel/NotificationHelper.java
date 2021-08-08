@@ -128,6 +128,18 @@ public class NotificationHelper extends ContextWrapper {
         NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle(receiverPerson);
 
 
+        for(Message m: messages)
+        {
+            //this code is to add message to notification manager
+            NotificationCompat.MessagingStyle.Message messageNotification = new NotificationCompat.MessagingStyle.Message(
+                    m.getMessage(),
+                    m.getTimestamp(),
+                    receiverPerson //who will recieve the message
+            );
+
+            messagingStyle.addMessage(messageNotification);
+
+        }
 
         if(!myMessage.equals(""))
         {
@@ -140,20 +152,6 @@ public class NotificationHelper extends ContextWrapper {
 
             messagingStyle.addMessage(myMessageNotification);
 
-        } else
-        {
-            for(Message m: messages)
-            {
-                //this code is to add message to notification manager
-                NotificationCompat.MessagingStyle.Message messageNotification = new NotificationCompat.MessagingStyle.Message(
-                        m.getMessage(),
-                        m.getTimestamp(),
-                        receiverPerson //who will recieve the message
-                );
-
-                messagingStyle.addMessage(messageNotification);
-
-            }
         }
 
 
