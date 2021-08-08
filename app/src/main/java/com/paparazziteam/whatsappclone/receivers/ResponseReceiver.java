@@ -1,11 +1,19 @@
 package com.paparazziteam.whatsappclone.receivers;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.RemoteInput;
+
+import com.google.gson.Gson;
+import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.channel.NotificationHelper;
+import com.paparazziteam.whatsappclone.models.Message;
 
 import static com.paparazziteam.whatsappclone.services.MyFirebaseMessagingClient.NOTIFICATION_REPLY;
 
@@ -14,6 +22,52 @@ public class ResponseReceiver  extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         String message = getMessageText(intent).toString();
+
+        int id = intent.getExtras().getInt("idNotification");
+        String messagesJSON = intent.getExtras().getString("messages");
+        String usernameSender = intent.getExtras().getString("usernameSender");
+        String imageSender = intent.getExtras().getString("imageSender");
+        String imageReceiver = intent.getExtras().getString("imageReceiver");
+
+
+        Gson gson = new Gson();
+        Message[] messages = gson.fromJson(messagesJSON, Message[].class);
+
+        NotificationHelper helper = new NotificationHelper(context);
+
+        //Action on Notifications
+        Intent intentResponse = new Intent(context, ResponseReceiver.class);
+        intentResponse.putExtra("idNotification", id);
+        intentResponse.putExtra("messages", messagesJSON);
+        intentResponse.putExtra("usernameSender", usernameSender);
+        intentResponse.putExtra("imageSender", imageSender);
+        intentResponse.putExtra("imageReceiver", id);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,id,intentResponse,PendingIntent.FLAG_UPDATE_CURRENT);
+        RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY).setLabel("Tu mensaje...").build();
+
+        ////Data for action on notifications
+        NotificationCompat.Action actionResponse = new NotificationCompat.Action.Builder(
+                R.mipmap.ic_launcher,
+                "Responder",
+                pendingIntent)
+                .addRemoteInput(remoteInput)
+                .build();
+
+        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,message, usernameSender, "", null,actionResponse);
+
+        //Random random = new Random();
+        //int numeroRam = random.nextInt(10000);
+
+
+
+        Log.e("NOTIFICATION RESPONSE","ID:" + id);
+        Log.e("NOTIFICATION RESPONSE","usernameSender:" + usernameSender);
+        //the id is the position of notifications on the smarthphone
+        helper.getManager().notify(id,builder.build());
+
+
+
         android.util.Log.e("NOTIFICATION: ","Mensaje input: "+message);
     }
 

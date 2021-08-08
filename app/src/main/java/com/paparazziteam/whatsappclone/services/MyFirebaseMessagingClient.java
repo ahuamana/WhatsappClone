@@ -37,6 +37,7 @@ import java.util.Random;
 public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
 
+
     public static final String NOTIFICATION_REPLY = "NotificationReply";
 
     //Servira para enviar token de notificaciones de dispositivo a dispositivo
@@ -65,7 +66,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
             if(title.equals("MENSAJE"))
             {
                 Log.e("NOTIFICATION","Mensaje con imagen");
-                getImageReceiver(data);
+                getImageSender(data);
             }else
             {
                 showNotification(title, body, idNotification);
@@ -92,19 +93,19 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         helper.getManager().notify(id,builder.build());
     }
 
-    private void getImageReceiver(Map<String, String> data)
+    private void getImageSender(Map<String, String> data)
     {
-        String imageReceiver = data.get("imageReceiver");
+        String imageSender = data.get("imageSender");
 
-        Log.e("NOTIFICATION","imageReceiver:" + imageReceiver);
+        Log.e("NOTIFICATION","imageSender:" + imageSender);
 
-        if(imageReceiver == null)
+        if(imageSender == null)
         {
             showNotificationMessage(data,null);
             return;
         }
 
-        if(imageReceiver.equals(""))
+        if(imageSender.equals(""))
         {
             showNotificationMessage(data,null);
             return;
@@ -113,7 +114,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         //download image into bitmap
         Glide.with(getApplicationContext())
                 .asBitmap()
-                .load(imageReceiver)
+                .load(imageSender)
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull @NotNull Bitmap resource, @Nullable @org.jetbrains.annotations.Nullable Transition<? super Bitmap> transition) {
@@ -139,11 +140,15 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
     private void showNotificationMessage(Map<String, String> data, Bitmap bitmapReceiver) {
 
+        String imageSender = data.get("imageSender");
+        String imageReceiver = data.get("imageReceiver");
+
         String body = data.get("body");
         String idNotification = data.get("idNotification");
         String usernameSender = data.get("usernameSender");
         String usernameReceiver = data.get("usernameReceiver");
         String messagesJSON = data.get("messagesJSON");
+        int id = Integer.parseInt(idNotification);
 
 
         Gson gson = new Gson();
@@ -153,7 +158,13 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         //Action on Notifications
         Intent intentResponse = new Intent(this, ResponseReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intentResponse,PendingIntent.FLAG_UPDATE_CURRENT);
+        intentResponse.putExtra("idNotification", id);
+        intentResponse.putExtra("messages", messagesJSON);
+        intentResponse.putExtra("usernameSender", usernameSender);
+        intentResponse.putExtra("imageSender", imageSender);
+        intentResponse.putExtra("imageReceiver", id);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,id,intentResponse,PendingIntent.FLAG_UPDATE_CURRENT);
         RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY).setLabel("Tu mensaje...").build();
 
         ////Data for action on notifications
@@ -164,12 +175,12 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
                 .addRemoteInput(remoteInput)
                 .build();
 
-        NotificationCompat.Builder builder = helper.getNotificationMessage(messages, usernameSender, usernameReceiver, bitmapReceiver,actionResponse);
+        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,"", usernameSender, usernameReceiver, bitmapReceiver,actionResponse);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
 
-        int id = Integer.parseInt(idNotification);
+
 
         Log.e("NOTIFICATION","ID:" + id);
         Log.e("NOTIFICATION","usernameSender:" + usernameSender);

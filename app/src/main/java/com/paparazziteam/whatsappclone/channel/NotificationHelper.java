@@ -79,6 +79,7 @@ public class NotificationHelper extends ContextWrapper {
     //Notifications with style of message
     public NotificationCompat.Builder getNotificationMessage(
             Message[] messages,
+            String myMessage,
             String usernameReceiver,
             String usernameSender,
             Bitmap bitmapReceiver,
@@ -86,7 +87,7 @@ public class NotificationHelper extends ContextWrapper {
     {
         //User who send the message
         Person myPerson = new Person.Builder()
-                .setName(usernameSender)
+                .setName("Tu")
                 .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
                 .build();
 
@@ -125,7 +126,18 @@ public class NotificationHelper extends ContextWrapper {
 
         }
 
+        if(!myMessage.equals(""))
+        {
+            //this code is to add message to notification manager
+            NotificationCompat.MessagingStyle.Message myMessageNotification = new NotificationCompat.MessagingStyle.Message(
+                    myMessage,
+                    new Date().getTime(),
+                    myPerson //who will recieve the message
+            );
 
+            messagingStyle.addMessage(myMessageNotification);
+
+        }
 
 
 
