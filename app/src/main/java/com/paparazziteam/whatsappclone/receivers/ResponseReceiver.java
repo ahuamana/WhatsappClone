@@ -27,10 +27,13 @@ import com.paparazziteam.whatsappclone.activities.ChatActivity;
 import com.paparazziteam.whatsappclone.channel.NotificationHelper;
 import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.providers.MessageProvider;
+import com.paparazziteam.whatsappclone.providers.NotificationProvider;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.paparazziteam.whatsappclone.services.MyFirebaseMessagingClient.NOTIFICATION_REPLY;
@@ -49,11 +52,14 @@ public class ResponseReceiver  extends BroadcastReceiver {
         int id = intent.getExtras().getInt("idNotification");
         String messagesJSON = intent.getExtras().getString("messages");
         String usernameSender = intent.getExtras().getString("usernameSender");
+        String usernameReceiver = intent.getExtras().getString("usernameReceiver");
         String imageSender = intent.getExtras().getString("imageSender");
         String imageReceiver = intent.getExtras().getString("imageReceiver");
         String idChat = intent.getExtras().getString("idChat");
         String idSender = intent.getExtras().getString("idSender");
         String idReceiver = intent.getExtras().getString("idReceiver");
+        String tokenSender = intent.getExtras().getString("tokenSender");
+        String tokenReceiver = intent.getExtras().getString("tokenReceiver");
 
 
         Gson gson = new Gson();
@@ -66,11 +72,14 @@ public class ResponseReceiver  extends BroadcastReceiver {
         intentResponse.putExtra("idNotification", id);
         intentResponse.putExtra("messages", messagesJSON);
         intentResponse.putExtra("usernameSender", usernameSender);
+        intentResponse.putExtra("usernameReceiver", usernameReceiver);
         intentResponse.putExtra("imageSender", imageSender);
-        intentResponse.putExtra("imageReceiver", id);
+        intentResponse.putExtra("imageReceiver", imageReceiver);
         intentResponse.putExtra("idChat", idChat);
         intentResponse.putExtra("idSender", idSender);
         intentResponse.putExtra("idReceiver", idReceiver);
+        intentResponse.putExtra("tokenSender", tokenSender);
+        intentResponse.putExtra("tokenReceiver", tokenReceiver);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,id,intentResponse,PendingIntent.FLAG_UPDATE_CURRENT);
         RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY).setLabel("Tu mensaje...").build();
@@ -88,30 +97,50 @@ public class ResponseReceiver  extends BroadcastReceiver {
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
 
-        createMessage(message, idChat,idReceiver,idSender);
+
 
         Log.e("NOTIFICATION RESPONSE","ID:" + id);
         Log.e("NOTIFICATION RESPONSE","usernameSender:" + usernameSender);
         //the id is the position of notifications on the smarthphone
         helper.getManager().notify(id,builder.build());
 
+        if(!message.equals(""))
+        {
+            Message myMessage = new Message();
+            myMessage.setIdChat(idChat);
+            myMessage.setIdSender(idReceiver);
+            myMessage.setIdReceiver(idSender);
+            myMessage.setMessage(message);
+            myMessage.setStatus("ENVIADO");
+            myMessage.setType("texto");
+            myMessage.setTimestamp(new Date().getTime());
 
-        android.util.Log.e("NOTIFICATION: ","Mensaje input: "+message);
+            createMessage(myMessage);
+
+            ArrayList<Message> messageArrayList = new ArrayList<>();
+            messageArrayList.add(myMessage);
+
+            sendNotification(context,
+                    messageArrayList,
+                    String.valueOf(id),
+                    usernameReceiver,
+                    usernameSender,
+                    imageReceiver,
+                    imageSender,
+                    idChat,
+                    idSender,
+                    idReceiver,
+                    tokenSender,
+                    tokenReceiver
+                    );
+
+        }
+
+
     }
 
-    private void createMessage(String messageText, String idChat,String idReceiver, String idSender) {
+    private void createMessage(Message message) {
 
-
-        if(!messageText.equals(""))
-        {
-            Message message = new Message();
-            message.setIdChat(idChat);
-            message.setIdSender(idReceiver);
-            message.setIdReceiver(idSender);
-            message.setMessage(messageText);
-            message.setStatus("ENVIADO");
-            message.setType("texto");
-            message.setTimestamp(new Date().getTime());
 
             MessageProvider mMessageProvider = new MessageProvider();
 
@@ -122,7 +151,45 @@ public class ResponseReceiver  extends BroadcastReceiver {
                     Log.e("NOTIFICATION RESPONSE","Mensaje creado");
                 }
             });
-        }
+
+    }
+
+    private void sendNotification(Context context,
+                                  ArrayList<Message> messages,
+                                  String idNotification,
+                                  String usernameReceiver,
+                                  String usernameSender,
+                                  String imageReceiver,
+                                  String imageSender,
+                                  String idChat,
+                                  String idSender,
+                                  String idReceiver,
+                                  String tokenSender,
+                                  String tokenReceiver) {
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title","MENSAJE");
+        data.put("body", "texto mensaje");
+        data.put("idNotification", idNotification);
+        data.put("usernameReceiver", usernameSender);
+        data.put("usernameSender", usernameReceiver);
+        data.put("imageSender",imageReceiver);
+        data.put("imageReceiver",imageSender);
+        data.put("idChat",idChat);
+        data.put("idSender",idReceiver);
+        data.put("idReceiver",idSender);
+        data.put("tokenSender",tokenReceiver);
+        data.put("tokenReceiver",tokenSender);
+
+        Gson gson = new Gson();
+        String messagesJSON = gson.toJson(messages); // Arralist to json
+
+        data.put("messagesJSON", messagesJSON);
+
+        NotificationProvider mNotificationProvider = new NotificationProvider();
+
+        mNotificationProvider.send(context, tokenSender, data);
+
     }
 
     private void getMyImage(Context context, Intent intent)

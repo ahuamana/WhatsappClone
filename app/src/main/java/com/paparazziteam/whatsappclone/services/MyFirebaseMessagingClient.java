@@ -142,6 +142,8 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         String imageSender = data.get("imageSender");
         String imageReceiver = data.get("imageReceiver");
+        String tokenSender = data.get("tokenSender");
+        String tokenReceiver = data.get("tokenReceiver");
 
         String body = data.get("body");
         String idNotification = data.get("idNotification");
@@ -165,11 +167,14 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         intentResponse.putExtra("idNotification", id);
         intentResponse.putExtra("messages", messagesJSON);
         intentResponse.putExtra("usernameSender", usernameSender);
+        intentResponse.putExtra("usernameReceiver", usernameReceiver);
         intentResponse.putExtra("imageSender", imageSender);
-        intentResponse.putExtra("imageReceiver", id);
+        intentResponse.putExtra("imageReceiver", imageReceiver);
         intentResponse.putExtra("idChat", idChat);
         intentResponse.putExtra("idSender", idSender);
         intentResponse.putExtra("idReceiver", idReceiver);
+        intentResponse.putExtra("tokenSender", tokenSender);
+        intentResponse.putExtra("tokenReceiver", tokenReceiver);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,id,intentResponse,PendingIntent.FLAG_UPDATE_CURRENT);
         RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY).setLabel("Tu mensaje...").build();
