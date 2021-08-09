@@ -364,6 +364,9 @@ public class ChatActivity extends AppCompatActivity {
         data.put("usernameReceiver", mUserReceiver.getUsername());
         data.put("usernameSender", mMyUser.getUsername());
         data.put("imageSender",mMyUser.getImage());
+        data.put("idChat",mExtraIdUser);
+        data.put("idSender",mAuthProvider.getID());
+        data.put("idReceiver",mUserReceiver.getId());
 
         Gson gson = new Gson();
         String messagesJSON = gson.toJson(messages); // Arralist to json

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,13 +18,17 @@ import androidx.core.app.RemoteInput;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.activities.ChatActivity;
 import com.paparazziteam.whatsappclone.channel.NotificationHelper;
 import com.paparazziteam.whatsappclone.models.Message;
+import com.paparazziteam.whatsappclone.providers.MessageProvider;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
 import java.util.Map;
 
 import static com.paparazziteam.whatsappclone.services.MyFirebaseMessagingClient.NOTIFICATION_REPLY;
@@ -44,6 +49,9 @@ public class ResponseReceiver  extends BroadcastReceiver {
         String usernameSender = intent.getExtras().getString("usernameSender");
         String imageSender = intent.getExtras().getString("imageSender");
         String imageReceiver = intent.getExtras().getString("imageReceiver");
+        String idChat = intent.getExtras().getString("idChat");
+        String idSender = intent.getExtras().getString("idSender");
+        String idReceiver = intent.getExtras().getString("idReceiver");
 
 
         Gson gson = new Gson();
@@ -58,6 +66,9 @@ public class ResponseReceiver  extends BroadcastReceiver {
         intentResponse.putExtra("usernameSender", usernameSender);
         intentResponse.putExtra("imageSender", imageSender);
         intentResponse.putExtra("imageReceiver", id);
+        intentResponse.putExtra("idChat", idChat);
+        intentResponse.putExtra("idSender", idSender);
+        intentResponse.putExtra("idReceiver", idReceiver);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,id,intentResponse,PendingIntent.FLAG_UPDATE_CURRENT);
         RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY).setLabel("Tu mensaje...").build();
@@ -82,9 +93,29 @@ public class ResponseReceiver  extends BroadcastReceiver {
         //the id is the position of notifications on the smarthphone
         helper.getManager().notify(id,builder.build());
 
-
+        createMessage(message, idChat,idReceiver,idSender);
 
         android.util.Log.e("NOTIFICATION: ","Mensaje input: "+message);
+    }
+
+    private void createMessage(String messageText, String idChat,String idReceiver, String idSender) {
+
+
+        if(!messageText.equals(""))
+        {
+            Message message = new Message();
+            message.setIdChat(idChat);
+            message.setIdSender(idReceiver);
+            message.setIdReceiver(idSender);
+            message.setMessage(messageText);
+            message.setStatus("ENVIADO");
+            message.setType("texto");
+            message.setTimestamp(new Date().getTime());
+
+            MessageProvider mMessageProvider = new MessageProvider();
+
+            mMessageProvider.create(message);
+        }
     }
 
     private void getMyImage(Context context, Intent intent)
