@@ -18,7 +18,9 @@ import androidx.core.app.RemoteInput;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ChatActivity;
@@ -86,14 +88,13 @@ public class ResponseReceiver  extends BroadcastReceiver {
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
 
-
+        createMessage(message, idChat,idReceiver,idSender);
 
         Log.e("NOTIFICATION RESPONSE","ID:" + id);
         Log.e("NOTIFICATION RESPONSE","usernameSender:" + usernameSender);
         //the id is the position of notifications on the smarthphone
         helper.getManager().notify(id,builder.build());
 
-        createMessage(message, idChat,idReceiver,idSender);
 
         android.util.Log.e("NOTIFICATION: ","Mensaje input: "+message);
     }
@@ -114,7 +115,13 @@ public class ResponseReceiver  extends BroadcastReceiver {
 
             MessageProvider mMessageProvider = new MessageProvider();
 
-            mMessageProvider.create(message);
+            mMessageProvider.create(message).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<Void> task) {
+
+                    Log.e("NOTIFICATION RESPONSE","Mensaje creado");
+                }
+            });
         }
     }
 
