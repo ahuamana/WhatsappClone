@@ -45,7 +45,7 @@ public class ResponseReceiver  extends BroadcastReceiver {
        getMyImage(context,intent);
     }
 
-    private void showNotificationMessage(Context context, Intent intent, Bitmap myBitmap) {
+    private void showNotification(Context context, Intent intent, Bitmap myBitmap) {
 
         String message = getMessageText(intent).toString();
 
@@ -53,8 +53,10 @@ public class ResponseReceiver  extends BroadcastReceiver {
         String messagesJSON = intent.getExtras().getString("messages");
         String usernameSender = intent.getExtras().getString("usernameSender");
         String usernameReceiver = intent.getExtras().getString("usernameReceiver");
+
         String imageSender = intent.getExtras().getString("imageSender");
         String imageReceiver = intent.getExtras().getString("imageReceiver");
+
         String idChat = intent.getExtras().getString("idChat");
         String idSender = intent.getExtras().getString("idSender");
         String idReceiver = intent.getExtras().getString("idReceiver");
@@ -92,7 +94,7 @@ public class ResponseReceiver  extends BroadcastReceiver {
                 .addRemoteInput(remoteInput)
                 .build();
 
-        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,message, usernameSender, "", null, myBitmap,actionResponse);
+        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,message, usernameSender, null, myBitmap,actionResponse);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
@@ -200,13 +202,13 @@ public class ResponseReceiver  extends BroadcastReceiver {
 
         if(myImage == null)
         {
-            showNotificationMessage(context,intent, null);
+            showNotification(context,intent, null);
             return;
         }
 
         if(myImage.equals(""))
         {
-            showNotificationMessage(context,intent,null);
+            showNotification(context,intent,null);
             return;
         }
 
@@ -218,7 +220,7 @@ public class ResponseReceiver  extends BroadcastReceiver {
                     @Override
                     public void onResourceReady(@NonNull @NotNull Bitmap resource, @Nullable @org.jetbrains.annotations.Nullable Transition<? super Bitmap> transition) {
 
-                        showNotificationMessage(context, intent, resource);
+                        showNotification(context, intent, resource);
 
                     }
 
@@ -231,7 +233,7 @@ public class ResponseReceiver  extends BroadcastReceiver {
                     public void onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
 
-                        showNotificationMessage(context, intent,null);
+                        showNotification(context, intent,null);
 
                     }
                 });

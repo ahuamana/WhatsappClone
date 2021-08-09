@@ -140,8 +140,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
     private void showNotificationMessage(Map<String, String> data, Bitmap bitmapReceiver) {
 
-        String imageSender = data.get("imageSender");
-        String imageReceiver = data.get("imageReceiver");
+
         String tokenSender = data.get("tokenSender");
         String tokenReceiver = data.get("tokenReceiver");
 
@@ -150,6 +149,8 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         String usernameSender = data.get("usernameSender");
         String usernameReceiver = data.get("usernameReceiver");
         String messagesJSON = data.get("messagesJSON");
+        String imageSender = data.get("imageSender");
+        String imageReceiver = data.get("imageReceiver");
         int id = Integer.parseInt(idNotification);
 
         String idChat = data.get("idChat");
@@ -187,7 +188,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
                 .addRemoteInput(remoteInput)
                 .build();
 
-        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,"", usernameSender, usernameReceiver, bitmapReceiver, null,actionResponse);
+        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,"", usernameSender, bitmapReceiver, null, actionResponse);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);

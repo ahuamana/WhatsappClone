@@ -80,29 +80,27 @@ public class NotificationHelper extends ContextWrapper {
     public NotificationCompat.Builder getNotificationMessage(
             Message[] messages,
             String myMessage,
-            String usernameReceiver,
             String usernameSender,
             Bitmap bitmapReceiver,
             Bitmap myBitmap,
             NotificationCompat.Action actionResponse)
     {
         //User who send the message
-        Person myPerson = null;
-
+       Person myPerson = null;
        Person receiverPerson= null;
 
        if(bitmapReceiver == null)
        {
            //User who recieve the message
            receiverPerson = new Person.Builder()
-                   .setName(usernameReceiver)
+                   .setName(usernameSender)
                    .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person))
                    .build();
        } else
        {
            //User who recieve the message
            receiverPerson = new Person.Builder()
-                   .setName(usernameReceiver)
+                   .setName(usernameSender)
                    .setIcon(IconCompat.createWithBitmap(bitmapReceiver))
                    .build();
        }
@@ -118,7 +116,7 @@ public class NotificationHelper extends ContextWrapper {
        {
            //User who recieve the message
            myPerson = new Person.Builder()
-                   .setName(usernameReceiver)
+                   .setName("Tu")
                    .setIcon(IconCompat.createWithBitmap(myBitmap))
                    .build();
        }
