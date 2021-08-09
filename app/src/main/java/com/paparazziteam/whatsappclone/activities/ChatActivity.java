@@ -600,7 +600,7 @@ public class ChatActivity extends AppCompatActivity {
                         {
                             if(!mUserReceiver.getImage().equals(""))
                             {
-                                Glide.with(ChatActivity.this)
+                                Glide.with(getApplicationContext())
                                         .load(mUserReceiver.getImage())
                                         .into(mCircleImageUser);
                             }
