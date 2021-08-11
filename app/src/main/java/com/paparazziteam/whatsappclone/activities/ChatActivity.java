@@ -680,6 +680,13 @@ public class ChatActivity extends AppCompatActivity {
                     intent.putExtra("data", mReturnValues);
                     intent.putExtra("idChat", mExtraIdChat);
                     intent.putExtra("idReceiver", mExtraIdUser);
+
+                    Gson gson = new Gson();
+                    String myUserJSON = gson.toJson(mMyUser); // Arralist to json
+                    String receiverUserJSON = gson.toJson(mUserReceiver); // Arralist to json
+
+                    intent.putExtra("myUser", myUserJSON);
+                    intent.putExtra("receiverUser", receiverUserJSON);
                     startActivity(intent);
 
 

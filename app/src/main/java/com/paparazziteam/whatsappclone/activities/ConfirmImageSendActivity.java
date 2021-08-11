@@ -8,15 +8,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.adapters.OptionsPagerAdapter;
 import com.paparazziteam.whatsappclone.models.Message;
+import com.paparazziteam.whatsappclone.models.User;
 import com.paparazziteam.whatsappclone.providers.AuthProvider;
 import com.paparazziteam.whatsappclone.providers.ImageProvider;
+import com.paparazziteam.whatsappclone.providers.NotificationProvider;
 import com.paparazziteam.whatsappclone.utils.ShadowTransformer;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConfirmImageSendActivity extends AppCompatActivity {
 
@@ -26,8 +31,13 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
     ArrayList<String> data;
     ArrayList<Message> messages = new ArrayList<>();
 
+    User mExtraMyUser;
+    User mExtraReceiverUser;
+
     AuthProvider mAuthProvider;
     ImageProvider mImageProvider;
+
+    NotificationProvider mNotificationProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +49,21 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
 
         mAuthProvider = new AuthProvider();
         mImageProvider = new ImageProvider();
+        mNotificationProvider = new NotificationProvider();
 
 
         data = getIntent().getStringArrayListExtra("data");
         mExtraIdChat = getIntent().getStringExtra("idChat");
         mExtraIdReceiver = getIntent().getStringExtra("idReceiver");
+
+        String myUser = getIntent().getStringExtra("myUser");
+        String receiverUser = getIntent().getStringExtra("receiverUser");
+
+        Gson gson = new Gson();
+
+        mExtraMyUser = gson.fromJson(myUser, User.class);
+        mExtraReceiverUser = gson.fromJson(receiverUser, User.class);
+
 
         if(data != null)
         {
@@ -81,6 +101,36 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
 
     }
 
+    private void sendNotification(ArrayList<Message> messages) {
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title","MENSAJE");
+        data.put("body", "texto mensaje");
+        data.put("idNotification", String.valueOf(mChat.getIdNotification()));
+        data.put("usernameReceiver", mUserReceiver.getUsername());
+        data.put("usernameSender", mMyUser.getUsername());
+        data.put("imageReceiver",mUserReceiver.getImage());
+        data.put("imageSender",mMyUser.getImage());
+
+        data.put("idChat",mExtraIdChat);
+        data.put("idSender",mAuthProvider.getID());
+        data.put("idReceiver",mExtraIdReceiver);
+
+        data.put("tokenSender",mMyUser.getToken());
+        data.put("tokenReceiver",mUserReceiver.getToken());
+
+        Gson gson = new Gson();
+        String messagesJSON = gson.toJson(messages); // Arralist to json
+
+        data.put("messagesJSON", messagesJSON);
+
+
+
+        mNotificationProvider.send(ConfirmImageSendActivity.this, mUserReceiver.getToken(), data);
+
+    }
+
+
     public void send()
     {
         /*for(int i = 0; i < data.size() ; i++)
@@ -89,7 +139,13 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
         }*/
 
         mImageProvider.uploadMultiple(ConfirmImageSendActivity.this,messages);
+
+        //Notification for images
+
+
         finish();//cerrar el view
+
+
     }
 
     public void setMessage(int position, String message)
