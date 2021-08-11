@@ -94,21 +94,16 @@ public class ResponseReceiver  extends BroadcastReceiver {
                 .addRemoteInput(remoteInput)
                 .build();
 
-        //Action on Notifications status
-        Intent intentStatus = new Intent(context, StatusReceiver.class);
-        intentStatus.putExtra("messages",messagesJSON);
 
 
-        PendingIntent pendingIntentStatus = PendingIntent.getBroadcast(context,id,intentStatus,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        ////Data for action on Notifications status
-        NotificationCompat.Action actionStatus = new NotificationCompat.Action.Builder(
-                R.mipmap.ic_launcher,
-                "Marcar como leido",
-                pendingIntentStatus).build();
-
-
-        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,message, usernameSender, null, myBitmap,actionResponse,actionStatus);
+        NotificationCompat.Builder builder = helper.getNotificationMessage(
+                messages,
+                message,
+                usernameSender,
+                null,
+                myBitmap,actionResponse,
+                null);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);

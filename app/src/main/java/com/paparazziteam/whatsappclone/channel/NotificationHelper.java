@@ -156,11 +156,19 @@ public class NotificationHelper extends ContextWrapper {
 
 
 
-        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(messagingStyle)
-                .addAction(actionResponse)
-                .addAction(actionStatus);
+                .addAction(actionResponse);
+               // .addAction(actionStatus);
+
+
+        if(actionStatus != null)
+        {
+            notification.addAction(actionStatus);
+        }
+
+        return notification;
     }
 
 }
