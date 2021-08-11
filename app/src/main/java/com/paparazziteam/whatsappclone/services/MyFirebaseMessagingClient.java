@@ -28,6 +28,7 @@ import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.channel.NotificationHelper;
 import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.receivers.ResponseReceiver;
+import com.paparazziteam.whatsappclone.receivers.StatusReceiver;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -188,7 +189,28 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
                 .addRemoteInput(remoteInput)
                 .build();
 
-        NotificationCompat.Builder builder = helper.getNotificationMessage(messages,"", usernameSender, bitmapReceiver, null, actionResponse);
+
+        //Action on Notifications status
+        Intent intentStatus = new Intent(this, StatusReceiver.class);
+
+
+        PendingIntent pendingIntentStatus = PendingIntent.getBroadcast(this,id,intentStatus,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        ////Data for action on Notifications status
+        NotificationCompat.Action actionStatus = new NotificationCompat.Action.Builder(
+                R.mipmap.ic_launcher,
+                "Marcar como leido",
+                pendingIntentStatus).build();
+
+
+        NotificationCompat.Builder builder = helper.getNotificationMessage(
+                messages,
+                "",
+                usernameSender,
+                bitmapReceiver,
+                null,
+                actionResponse,
+                actionStatus);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
