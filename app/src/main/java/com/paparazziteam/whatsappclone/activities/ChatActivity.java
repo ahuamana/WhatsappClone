@@ -708,6 +708,20 @@ public class ChatActivity extends AppCompatActivity {
                     }
 
                     mFilesProvider.savaFiles(ChatActivity.this, mFileList,mExtraIdChat,mExtraIdUser);
+
+                    Message message = new Message();
+                    message.setIdChat(mExtraIdChat);
+                    message.setIdSender(mAuthProvider.getID());
+                    message.setIdReceiver(mExtraIdUser);
+                    message.setMessage("\uD83D\uDCC4 Documento");
+                    message.setStatus("ENVIADO");
+                    message.setType("texto");
+                    message.setTimestamp(new Date().getTime());
+
+                    ArrayList<Message> messages = new ArrayList<>();
+                    messages.add(message);
+
+                    sendNotification(messages);
                 }
             }
 
