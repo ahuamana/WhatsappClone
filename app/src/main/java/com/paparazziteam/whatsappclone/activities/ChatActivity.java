@@ -687,6 +687,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     intent.putExtra("myUser", myUserJSON);
                     intent.putExtra("receiverUser", receiverUserJSON);
+                    intent.putExtra("idNotification",  String.valueOf(mChat.getIdNotification()));
                     startActivity(intent);
 
 
@@ -722,7 +723,7 @@ public class ChatActivity extends AppCompatActivity {
                     message.setIdReceiver(mExtraIdUser);
                     message.setMessage("\uD83D\uDCC4 Documento");
                     message.setStatus("ENVIADO");
-                    message.setType("texto");
+                    message.setType("file");
                     message.setTimestamp(new Date().getTime());
 
                     ArrayList<Message> messages = new ArrayList<>();

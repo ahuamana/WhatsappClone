@@ -28,6 +28,7 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
     ViewPager mViewPager;
     String mExtraIdChat;
     String mExtraIdReceiver;
+    String mExtraIdNotification;
     ArrayList<String> data;
     ArrayList<Message> messages = new ArrayList<>();
 
@@ -55,6 +56,7 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
         data = getIntent().getStringArrayListExtra("data");
         mExtraIdChat = getIntent().getStringExtra("idChat");
         mExtraIdReceiver = getIntent().getStringExtra("idReceiver");
+        mExtraIdNotification = getIntent().getStringExtra("idNotification");
 
         String myUser = getIntent().getStringExtra("myUser");
         String receiverUser = getIntent().getStringExtra("receiverUser");
@@ -106,18 +108,18 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
         Map<String, String> data = new HashMap<>();
         data.put("title","MENSAJE");
         data.put("body", "texto mensaje");
-        data.put("idNotification", String.valueOf(mChat.getIdNotification()));
-        data.put("usernameReceiver", mUserReceiver.getUsername());
-        data.put("usernameSender", mMyUser.getUsername());
-        data.put("imageReceiver",mUserReceiver.getImage());
-        data.put("imageSender",mMyUser.getImage());
+        data.put("idNotification", String.valueOf(mExtraIdNotification));
+        data.put("usernameReceiver", mExtraReceiverUser.getUsername());
+        data.put("usernameSender", mExtraMyUser.getUsername());
+        data.put("imageReceiver",mExtraReceiverUser.getImage());
+        data.put("imageSender",mExtraMyUser.getImage());
 
         data.put("idChat",mExtraIdChat);
         data.put("idSender",mAuthProvider.getID());
         data.put("idReceiver",mExtraIdReceiver);
 
-        data.put("tokenSender",mMyUser.getToken());
-        data.put("tokenReceiver",mUserReceiver.getToken());
+        data.put("tokenSender",mExtraMyUser.getToken());
+        data.put("tokenReceiver",mExtraReceiverUser.getToken());
 
         Gson gson = new Gson();
         String messagesJSON = gson.toJson(messages); // Arralist to json
@@ -126,7 +128,7 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
 
 
 
-        mNotificationProvider.send(ConfirmImageSendActivity.this, mUserReceiver.getToken(), data);
+        mNotificationProvider.send(ConfirmImageSendActivity.this, mExtraReceiverUser.getToken(), data);
 
     }
 
@@ -141,6 +143,17 @@ public class ConfirmImageSendActivity extends AppCompatActivity {
         mImageProvider.uploadMultiple(ConfirmImageSendActivity.this,messages);
 
         //Notification for images
+        Message message = new Message();
+        message.setIdChat(mExtraIdChat);
+        message.setIdSender(mAuthProvider.getID());
+        message.setIdReceiver(mExtraIdReceiver);
+        message.setMessage("\uD83D\uDCF7 Imagen");
+        message.setStatus("ENVIADO");
+        message.setType("image");
+        message.setTimestamp(new Date().getTime());
+
+        ArrayList<Message> messages = new ArrayList<>();
+        messages.add(message);
 
 
         finish();//cerrar el view
