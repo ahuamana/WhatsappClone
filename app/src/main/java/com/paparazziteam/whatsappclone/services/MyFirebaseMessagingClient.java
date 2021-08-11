@@ -192,6 +192,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         //Action on Notifications status
         Intent intentStatus = new Intent(this, StatusReceiver.class);
+        intentStatus.putExtra("messages",messagesJSON);
 
 
         PendingIntent pendingIntentStatus = PendingIntent.getBroadcast(this,id,intentStatus,PendingIntent.FLAG_UPDATE_CURRENT);

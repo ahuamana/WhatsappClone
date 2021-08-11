@@ -1,5 +1,6 @@
 package com.paparazziteam.whatsappclone.receivers;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,24 +41,29 @@ public class StatusReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
        //getMyImage(context,intent);
+        updateStatus(context,intent);
     }
 
-    private void showNotification(Context context, Intent intent, Bitmap myBitmap) {
+    private void updateStatus(Context context, Intent intent) {
 
 
         int id = intent.getExtras().getInt("idNotification");
         String messagesJSON = intent.getExtras().getString("messages");
-        String usernameSender = intent.getExtras().getString("usernameSender");
-        String usernameReceiver = intent.getExtras().getString("usernameReceiver");
 
-        String imageSender = intent.getExtras().getString("imageSender");
-        String imageReceiver = intent.getExtras().getString("imageReceiver");
+        MessageProvider messageProvider = new MessageProvider();
 
-        String idChat = intent.getExtras().getString("idChat");
-        String idSender = intent.getExtras().getString("idSender");
-        String idReceiver = intent.getExtras().getString("idReceiver");
-        String tokenSender = intent.getExtras().getString("tokenSender");
-        String tokenReceiver = intent.getExtras().getString("tokenReceiver");
+        Gson gson = new Gson();
+        Message[] messages = gson.fromJson(messagesJSON, Message[].class);
+
+
+        for(Message m: messages)
+        {
+            messageProvider.updateStatus(m.getId(),"VISTO");
+        }
+
+        //Delete notification
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(id);
 
         /*
         NotificationCompat.Builder builder = helper.getNotificationMessage(messages,message, usernameSender, null, myBitmap,actionResponse);
