@@ -164,6 +164,8 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         Gson gson = new Gson();
         Message[] messages = gson.fromJson(messagesJSON, Message[].class);
 
+        updateStatus(messages);
+
         NotificationHelper helper = new NotificationHelper(getBaseContext());
 
         //Action on Notifications
