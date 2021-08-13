@@ -86,15 +86,24 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
             //change state from sensed to viewed
             if(message.getStatus().equals("ENVIADO"))
             {
-                holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_gray);
+                holder.imageViewCheck.setImageResource(R.drawable.icon_one_check_gray);
             }
             else
             {
-                if(message.getStatus().equals("VISTO"))
+                if(message.getStatus().equals("RECIBIDO"))
                 {
-                    holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_blue);
+                    holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_gray);
+                }
+                else
+                {
+                    if(message.getStatus().equals("VISTO"))
+                    {
+                        holder.imageViewCheck.setImageResource(R.drawable.icon_double_check_blue);
+                    }
                 }
             }
+
+
 
 
         }else
