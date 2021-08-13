@@ -20,7 +20,9 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.BiMap;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -241,10 +243,24 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         for (Message m: messages)
         {
-            if(!m.getStatus().equals("VISTO"))
-            {
-                messageProvider.updateStatus(m.getId(),"RECIBIDO");
-            }
+            messageProvider.getMessagesById(m.getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                    if(documentSnapshot.exists())
+                    {
+                        Message myMessage = documentSnapshot.toObject(Message.class);
+
+                        if(!myMessage.getStatus().equals("VISTO"))
+                        {
+                            messageProvider.updateStatus(myMessage.getId(),"RECIBIDO");
+                        }
+                    }
+
+                }
+            });
+
+
 
         }
     }

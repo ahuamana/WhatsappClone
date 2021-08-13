@@ -81,4 +81,10 @@ public class MessageProvider {
         return mCollection.whereEqualTo("idChat", idChat).orderBy("timestamp", Query.Direction.DESCENDING).limit(1);
     }
 
+    public DocumentReference getMessagesById(String idMessage)
+    {
+        return mCollection.document(idMessage);
+    }
+
+
 }
