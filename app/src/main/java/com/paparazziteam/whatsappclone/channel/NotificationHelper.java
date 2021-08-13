@@ -3,6 +3,7 @@ package com.paparazziteam.whatsappclone.channel;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -84,7 +85,8 @@ public class NotificationHelper extends ContextWrapper {
             Bitmap bitmapReceiver,
             Bitmap myBitmap,
             NotificationCompat.Action actionResponse,
-            NotificationCompat.Action actionStatus)
+            NotificationCompat.Action actionStatus,
+            PendingIntent contentIntent)
     {
         //User who send the message
        Person myPerson = null;
@@ -159,7 +161,8 @@ public class NotificationHelper extends ContextWrapper {
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(messagingStyle)
-                .addAction(actionResponse);
+                .addAction(actionResponse)
+                .setContentIntent(contentIntent);
                // .addAction(actionStatus);
 
 

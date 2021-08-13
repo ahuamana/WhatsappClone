@@ -95,6 +95,13 @@ public class ResponseReceiver  extends BroadcastReceiver {
                 .build();
 
 
+        Intent chatIntent = new Intent( context, ChatActivity.class);
+        chatIntent.putExtra("idUser", idSender);
+        chatIntent.putExtra("idChat", idChat);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(context,id,chatIntent,PendingIntent.FLAG_ONE_SHOT);
+
+
 
 
         NotificationCompat.Builder builder = helper.getNotificationMessage(
@@ -103,7 +110,8 @@ public class ResponseReceiver  extends BroadcastReceiver {
                 usernameSender,
                 null,
                 myBitmap,actionResponse,
-                null);
+                null,
+                contentIntent);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);

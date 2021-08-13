@@ -25,6 +25,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
+import com.paparazziteam.whatsappclone.activities.ChatActivity;
 import com.paparazziteam.whatsappclone.channel.NotificationHelper;
 import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.receivers.ResponseReceiver;
@@ -203,6 +204,11 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
                 "Marcar como leido",
                 pendingIntentStatus).build();
 
+        Intent chatIntent = new Intent( getApplicationContext(), ChatActivity.class);
+        chatIntent.putExtra("idUser", idSender);
+        chatIntent.putExtra("idChat", idChat);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(getBaseContext(),id,chatIntent,PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder builder = helper.getNotificationMessage(
                 messages,
@@ -211,7 +217,8 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
                 bitmapReceiver,
                 null,
                 actionResponse,
-                actionStatus);
+                actionStatus,
+                contentIntent);
 
         //Random random = new Random();
         //int numeroRam = random.nextInt(10000);
