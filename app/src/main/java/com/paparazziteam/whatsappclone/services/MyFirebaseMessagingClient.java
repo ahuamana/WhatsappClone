@@ -28,6 +28,7 @@ import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ChatActivity;
 import com.paparazziteam.whatsappclone.channel.NotificationHelper;
 import com.paparazziteam.whatsappclone.models.Message;
+import com.paparazziteam.whatsappclone.providers.MessageProvider;
 import com.paparazziteam.whatsappclone.receivers.ResponseReceiver;
 import com.paparazziteam.whatsappclone.receivers.StatusReceiver;
 
@@ -230,5 +231,15 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         Log.e("NOTIFICATION","usernameReceiver:" + usernameReceiver);
         //the id is the position of notifications on the smarthphone
         helper.getManager().notify(id,builder.build());
+    }
+
+    private void updateStatus(Message[] messages)
+    {
+        MessageProvider messageProvider = new MessageProvider();
+
+        for (Message m: messages)
+        {
+            messageProvider.updateStatus(m.getId(),"RECIBIDO");
+        }
     }
 }
