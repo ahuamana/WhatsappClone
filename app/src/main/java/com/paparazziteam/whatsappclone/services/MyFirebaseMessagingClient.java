@@ -241,7 +241,11 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         for (Message m: messages)
         {
-            messageProvider.updateStatus(m.getId(),"RECIBIDO");
+            if(!m.getStatus().equals("VISTO"))
+            {
+                messageProvider.updateStatus(m.getId(),"RECIBIDO");
+            }
+
         }
     }
 }
