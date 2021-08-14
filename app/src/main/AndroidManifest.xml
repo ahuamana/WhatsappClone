@@ -17,9 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone"
         tools:replace="android:theme">
+        <activity android:name=".activities.StatusConfirmActivity"></activity>
         <activity
             android:name=".activities.ConfirmImageSendActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activities.ChatActivity" />
         <activity
             android:name=".activities.ProfileActivity"
@@ -35,7 +36,6 @@
             </intent-filter>
         </activity>
 
-
         <service
             android:name=".services.MyFirebaseMessagingClient"
             android:exported="false">
@@ -48,14 +48,14 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <receiver android:name=".receivers.ResponseReceiver"
+        <receiver
+            android:name=".receivers.ResponseReceiver"
             android:enabled="true"
-            android:exported="false"/>
-
-        <receiver android:name=".receivers.StatusReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receivers.StatusReceiver"
             android:enabled="true"
-            android:exported="false"/>
-
+            android:exported="false" />
     </application>
 
 </manifest>

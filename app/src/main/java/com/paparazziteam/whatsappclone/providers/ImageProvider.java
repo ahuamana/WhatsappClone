@@ -14,6 +14,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.paparazziteam.whatsappclone.models.Message;
+import com.paparazziteam.whatsappclone.models.Status;
 import com.paparazziteam.whatsappclone.utils.CompressorBitmapImage;
 
 import org.jetbrains.annotations.NotNull;
@@ -91,6 +92,48 @@ public class ImageProvider {
                     }
 
                     
+                }
+            });//almacenar cada imagen en la base de datos
+        }
+
+    }
+
+
+    public void uploadMultipleStatus (Context context, ArrayList<Status> statusList)
+    {
+        Uri[] uri = new Uri[statusList.size()];
+
+        for(int i=0; i < statusList.size(); i++)
+        {
+            File file = CompressorBitmapImage.reduceImageSize(new File(statusList.get(i).getUrl())); // Coger la Rutal del archivo y reducir el tamaño y luego convertirlo en un archivo para enviarlo a firebase
+
+            uri[i] = Uri.parse("file://"+file.getPath());
+
+            StorageReference ref = mStorage.child(uri[i].getLastPathSegment());
+
+            ref.putFile(uri[i]).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) {
+
+                    if(task.isSuccessful())
+                    {
+                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+
+                                String url = uri.toString();
+                                statusList.get(index).setUrl(url); // metodo de alamcenar varias imagenes en una sola peticion
+                                mMessageProvider.create(messages.get(index));
+                                index++;
+                            }
+                        });
+
+                    }else
+                    {
+                        Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_SHORT).show();
+                    }
+
+
                 }
             });//almacenar cada imagen en la base de datos
         }
