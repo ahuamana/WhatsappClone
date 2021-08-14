@@ -29,12 +29,14 @@ public class ImageProvider {
     FirebaseStorage mFirebaseStorage;
     int index =0;
     MessageProvider mMessageProvider;
+    StatusProvider mStatusProvider;
 
     public ImageProvider()
     {
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorage = mFirebaseStorage.getReference();
         mMessageProvider = new MessageProvider();
+        mStatusProvider = new StatusProvider();
 
     }
 
@@ -123,7 +125,7 @@ public class ImageProvider {
 
                                 String url = uri.toString();
                                 statusList.get(index).setUrl(url); // metodo de alamcenar varias imagenes en una sola peticion
-                                mMessageProvider.create(messages.get(index));
+                                mStatusProvider.create(statusList.get(index));
                                 index++;
                             }
                         });

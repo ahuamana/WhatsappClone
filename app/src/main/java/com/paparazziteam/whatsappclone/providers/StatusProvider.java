@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.paparazziteam.whatsappclone.models.Message;
+import com.paparazziteam.whatsappclone.models.Status;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +19,11 @@ public class StatusProvider {
         mCollection = FirebaseFirestore.getInstance().collection("Status");
     }
 
-    public Task<Void> create (Message message)
+    public Task<Void> create (Status status)
     {
         DocumentReference document = mCollection.document();
-        message.setId(document.getId());
-        return document.set(message);
+        status.setId(document.getId());
+        return document.set(status);
     }
 
 
