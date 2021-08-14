@@ -27,6 +27,8 @@ import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ProfileActivity;
+import com.paparazziteam.whatsappclone.activities.StatusConfirmActivity;
+import com.paparazziteam.whatsappclone.models.Status;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class StatusFragment extends Fragment {
         //ImagePicker
         mOptions = Options.init()
                 .setRequestCode(100)                                           //Request code for activity results
-                .setCount(1)                                                   //Number of images to restict selection count
+                .setCount(5)                                                   //Number of images to restict selection count
                 .setFrontfacing(false)                                         //Front Facing camera on start
                 .setPreSelectedUrls(mReturnValues)                               //Pre selected Image Urls
                 .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
@@ -106,6 +108,10 @@ public class StatusFragment extends Fragment {
                 {
                     //Log.e("DATA INGRESASTE: ", "RequestCode: " + requestCode + " & resultacode: "+resultCode);
                     mReturnValues = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+
+                    Intent intent = new Intent(getContext(), StatusConfirmActivity.class);
+                    intent.putExtra("data",mReturnValues);
+                    startActivity(intent);
 
                 } else {
                     Toast.makeText(getContext(), "error al seleccionar la foto", Toast.LENGTH_SHORT).show();

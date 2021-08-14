@@ -89,7 +89,8 @@ public class StatusConfirmActivity extends AppCompatActivity {
 
     public void send()
     {
-
+        mImageProvider.uploadMultipleStatus(StatusConfirmActivity.this, mStatus);
+        finish();
     }
 
     public void setComment(int position, String comment)

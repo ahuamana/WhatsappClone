@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone"
         tools:replace="android:theme">
-        <activity android:name=".activities.StatusConfirmActivity"></activity>
+        <activity
+            android:name=".activities.StatusConfirmActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".activities.ConfirmImageSendActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
