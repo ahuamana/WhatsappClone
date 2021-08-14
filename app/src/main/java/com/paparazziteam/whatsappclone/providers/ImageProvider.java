@@ -27,7 +27,7 @@ public class ImageProvider {
 
     StorageReference mStorage;
     FirebaseStorage mFirebaseStorage;
-    int index =0;
+    int index;
     MessageProvider mMessageProvider;
     StatusProvider mStatusProvider;
 
@@ -37,6 +37,7 @@ public class ImageProvider {
         mStorage = mFirebaseStorage.getReference();
         mMessageProvider = new MessageProvider();
         mStatusProvider = new StatusProvider();
+        index =0;
 
     }
 
@@ -105,40 +106,43 @@ public class ImageProvider {
     {
         Uri[] uri = new Uri[statusList.size()];
 
-        for(int i=0; i < statusList.size(); i++)
-        {
-            File file = CompressorBitmapImage.reduceImageSize(new File(statusList.get(i).getUrl())); // Coger la Rutal del archivo y reducir el tamaño y luego convertirlo en un archivo para enviarlo a firebase
+        File file = CompressorBitmapImage.reduceImageSize(new File(statusList.get(index).getUrl())); // Coger la Rutal del archivo y reducir el tamaño y luego convertirlo en un archivo para enviarlo a firebase
 
-            uri[i] = Uri.parse("file://"+file.getPath());
+        uri[index] = Uri.parse("file://"+file.getPath());
 
-            StorageReference ref = mStorage.child(uri[i].getLastPathSegment());
+        StorageReference ref = mStorage.child(uri[index].getLastPathSegment());
 
-            ref.putFile(uri[i]).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) {
+        ref.putFile(uri[index]).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) {
 
-                    if(task.isSuccessful())
-                    {
-                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
+                if(task.isSuccessful())
+                {
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
 
-                                String url = uri.toString();
-                                statusList.get(index).setUrl(url); // metodo de alamcenar varias imagenes en una sola peticion
-                                mStatusProvider.create(statusList.get(index));
-                                index++;
+                            String url = uri.toString();
+                            statusList.get(index).setUrl(url); // metodo de alamcenar varias imagenes en una sola peticion
+                            mStatusProvider.create(statusList.get(index));
+                            index++;
+
+                            if(index < statusList.size())
+                            {
+                                uploadMultipleStatus(context,statusList);
                             }
-                        });
 
-                    }else
-                    {
-                        Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_SHORT).show();
-                    }
+                        }
+                    });
 
-
+                }else
+                {
+                    Toast.makeText(context, "Hubo un error al almacenar la imagen", Toast.LENGTH_SHORT).show();
                 }
-            });//almacenar cada imagen en la base de datos
-        }
+
+
+            }
+        });//almacenar cada imagen en la base de datos
 
     }
 }
