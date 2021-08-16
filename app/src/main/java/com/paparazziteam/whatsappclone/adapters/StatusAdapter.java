@@ -24,6 +24,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ChatActivity;
 import com.paparazziteam.whatsappclone.models.Chat;
@@ -51,6 +52,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.viewHolder
 
     ArrayList<Status> statusList;
 
+    Gson gson = new Gson();
 
     public StatusAdapter(FragmentActivity context, ArrayList<Status> statusList) {
 
@@ -98,9 +100,28 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.viewHolder
     @Override
     public void onBindViewHolder(@NonNull @NotNull viewHolder holder, int position) {
 
+        Status[] statusGSON = gson.fromJson(statusList.get(position).getJson(), Status[].class);
+
+        holder.circularStatusView.setPortionsCount(statusGSON.length);
+
+        setImageStatus(statusGSON, holder);
+
         getUserInfo(holder,statusList.get(position).getIdUser());
 
+    }
 
+    private void setImageStatus(Status[] statusGSON, viewHolder holder) {
+
+        if(statusGSON.length > 0)
+        {
+            Glide.with(context)
+                    .load(statusGSON[statusGSON.length-1].getUrl())
+                    .into(holder.circleImageViewUser);
+
+            String relativeTime = RelativeTime.timeFormatAMPM(statusGSON[statusGSON.length-1].getTimestamp(), context);
+
+            holder.textViewDate.setText(relativeTime);
+        }
     }
 
     @Override

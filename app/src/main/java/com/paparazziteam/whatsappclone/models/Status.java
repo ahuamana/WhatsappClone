@@ -6,17 +6,19 @@ public class Status {
     private String idUser;
     private String comment;
     private String url;
+    private String json;
     private long timestamp;
     private long timestampLimit;
 
     public Status() {
     }
 
-    public Status(String id, String idUser, String comment, String url, long timestamp, long timestampLimit) {
+    public Status(String id, String idUser, String comment, String url, String json, long timestamp, long timestampLimit) {
         this.id = id;
         this.idUser = idUser;
         this.comment = comment;
         this.url = url;
+        this.json = json;
         this.timestamp = timestamp;
         this.timestampLimit = timestampLimit;
     }
@@ -51,6 +53,14 @@ public class Status {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
     }
 
     public long getTimestamp() {

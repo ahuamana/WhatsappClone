@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ProfileActivity;
 import com.paparazziteam.whatsappclone.activities.StatusConfirmActivity;
@@ -57,6 +58,9 @@ public class StatusFragment extends Fragment {
     StatusAdapter mAdapter;
     StatusProvider mStatusProvider;
 
+    ArrayList<Status> mNoRepeatStatusList;
+
+    Gson mGson = new Gson();
 
     public StatusFragment() {
 
@@ -117,14 +121,53 @@ public class StatusFragment extends Fragment {
                 {
 
                     ArrayList<Status> statusList = new ArrayList<>();
+                    mNoRepeatStatusList = new ArrayList<>();
 
                     for(DocumentSnapshot d: value.getDocuments())
                     {
                         Status s = d.toObject(Status.class);
                         statusList.add(s);
+
                     }
 
-                    mAdapter = new StatusAdapter(getActivity(),statusList);
+                    //AÑADIR a la lista mNoRepeatList ELEMENTOS NO REPETIDOS
+                    for(Status status: statusList)
+                    {
+                        boolean isFound = false;
+
+                        for(Status s: mNoRepeatStatusList)
+                        {
+                            if(s.getIdUser().equals(status.getIdUser()))
+                            {
+                                isFound=true;
+                                break; // Para que no continue recorriendo el for
+                            }
+                        }
+
+                        if(!isFound)
+                        {
+                            mNoRepeatStatusList.add(status);
+                        }
+                    }
+
+                    //Empaquetar todos los estados by user
+                    for(Status noRepeat: mNoRepeatStatusList)
+                    {
+                        ArrayList<Status> sList = new ArrayList<>();
+
+                        for(Status s: statusList)
+                        {
+                            if(s.getIdUser().equals(noRepeat.getIdUser()))
+                            {
+                                sList.add(s);
+                            }
+                        }
+
+                        String statusJSON = mGson.toJson(sList);
+                        noRepeat.setJson(statusJSON);
+                    }
+
+                    mAdapter = new StatusAdapter(getActivity(),mNoRepeatStatusList);
                     mRecyclerView.setAdapter(mAdapter);
 
                 }
