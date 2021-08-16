@@ -55,7 +55,8 @@ public class StatusConfirmActivity extends AppCompatActivity {
             {
                 long now =  new Date().getTime();
                 //long limit = now + (60 * 1000 * 3); // 3 minutos
-                long limit = now + (60 * 1000 * 20); // 20 minutos
+                //long limit = now + (60 * 1000 * 20); // 20 minutos
+                long limit = now + (60 * 1000 * 60 * 24); // 24 horas
 
                 Status s = new Status();
                 s.setIdUser(mAuthProvider.getID());

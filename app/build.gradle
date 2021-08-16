@@ -93,6 +93,9 @@ android {
         //circular status view android github
         implementation 'com.github.3llomi:CircularStatusView:V1.0.2'
 
+        //stories progress view android github
+        //https://github.com/shts/StoriesProgressView
+        implementation 'com.github.shts:StoriesProgressView:3.0.0'
 
     }
 
