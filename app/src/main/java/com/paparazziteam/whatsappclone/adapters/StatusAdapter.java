@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ChatActivity;
+import com.paparazziteam.whatsappclone.activities.StatusDetailActivity;
 import com.paparazziteam.whatsappclone.models.Chat;
 import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.models.Status;
@@ -101,12 +102,23 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.viewHolder
     public void onBindViewHolder(@NonNull @NotNull viewHolder holder, int position) {
 
         Status[] statusGSON = gson.fromJson(statusList.get(position).getJson(), Status[].class);
-
         holder.circularStatusView.setPortionsCount(statusGSON.length);
+
+
+        holder.myView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, StatusDetailActivity.class);
+                context.startActivity(intent);
+            }
+        });
+
 
         setImageStatus(statusGSON, holder);
 
         getUserInfo(holder,statusList.get(position).getIdUser());
+
+
 
     }
 
