@@ -90,6 +90,9 @@ android {
         implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
 
 
+        //circular status view android github
+        implementation 'com.github.3llomi:CircularStatusView:V1.0.2'
+
 
     }
 
