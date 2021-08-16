@@ -30,6 +30,7 @@ import com.fxn.utility.PermUtil;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.paparazziteam.whatsappclone.R;
@@ -41,6 +42,9 @@ import com.paparazziteam.whatsappclone.providers.StatusProvider;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.app.Activity.RESULT_CANCELED;
 
@@ -61,6 +65,8 @@ public class StatusFragment extends Fragment {
     ArrayList<Status> mNoRepeatStatusList;
 
     Gson mGson = new Gson();
+
+    ListenerRegistration mListener;
 
     public StatusFragment() {
 
@@ -107,13 +113,64 @@ public class StatusFragment extends Fragment {
 
         getStatus();
 
+        setInterval();
 
         return mView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(mListener != null)
+        {
+            mListener.remove();
+        }
+    }
+
+    private void setInterval() {
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+
+                //RECORRIENDO CADA ESTADO DEL USUARIO EN UN INTERVALO DE 1 MINUTO Y
+                if(mNoRepeatStatusList != null)
+                {
+                    for(int i=0; i< mNoRepeatStatusList.size(); i++)
+                    {
+                        if(mNoRepeatStatusList.get(i).getJson() != null)
+                        {
+                            Status[] statusGSON = mGson.fromJson(mNoRepeatStatusList.get(i).getJson(), Status[].class);
+
+
+                            for(int j=0; j< statusGSON.length;j++)
+                            {
+                                long now = new Date().getTime();
+
+                                // PREGUNTAR SI EL TIEMPO LIMITE ES MENOR A NUESTRA HORA ACTUAL
+                                if(now > statusGSON[j].getTimestampLimit())
+                                {
+                                    if(mListener != null)
+                                    {
+                                        mListener.remove();
+                                    }
+
+                                    //Update status
+                                    getStatus();
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }, 0,60000);  // 60000 milisegundos (1 minuto) // Retraso de 0 segundos
+    }
+
     private void getStatus() {
 
-        mStatusProvider.getStatusByTimestampLimit().addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mListener = mStatusProvider.getStatusByTimestampLimit().addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable @org.jetbrains.annotations.Nullable QuerySnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
 
@@ -233,6 +290,8 @@ public class StatusFragment extends Fragment {
 
         }
     }
+
+
 
 
 
