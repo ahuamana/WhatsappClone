@@ -21,13 +21,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/circleImageUser_chat_adapter"
+                android:id="@+id/circleImageUser_status_adapter"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_launcher_background"/>
             
             <com.devlomi.circularstatusview.CircularStatusView
+                android:id="@+id/circularStatusView"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
@@ -45,12 +46,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp">
 
 
             <TextView
-                android:id="@+id/textViewUser_chat_adapter"
+                android:id="@+id/textViewUsername_status_adapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre de Usuario"
@@ -61,15 +62,13 @@
 
 
             <TextView
-                android:id="@+id/textViewLastMessage_chat_adapter"
+                android:id="@+id/textViewDate_status_adapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fecha"
                 android:textSize="14dp"
                 android:maxLines="1"
                 android:layout_weight="1"/>
-
-
 
 
         </LinearLayout>

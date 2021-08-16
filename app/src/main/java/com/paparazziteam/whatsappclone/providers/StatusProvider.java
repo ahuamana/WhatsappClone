@@ -9,6 +9,7 @@ import com.paparazziteam.whatsappclone.models.Message;
 import com.paparazziteam.whatsappclone.models.Status;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,12 @@ public class StatusProvider {
         return document.set(status);
     }
 
+    //filter status for "dates where they are greater than date now "
+    public Query getStatusByTimestampLimit()
+    {
+        long now = new Date().getTime();
 
+        return mCollection.whereGreaterThan("timestampLimit",now);
+    }
 
 }

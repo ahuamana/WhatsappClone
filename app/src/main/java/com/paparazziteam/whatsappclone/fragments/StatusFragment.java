@@ -15,6 +15,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +27,16 @@ import android.widget.Toast;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.paparazziteam.whatsappclone.R;
 import com.paparazziteam.whatsappclone.activities.ProfileActivity;
 import com.paparazziteam.whatsappclone.activities.StatusConfirmActivity;
+import com.paparazziteam.whatsappclone.adapters.StatusAdapter;
 import com.paparazziteam.whatsappclone.models.Status;
+import com.paparazziteam.whatsappclone.providers.StatusProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,7 +53,9 @@ public class StatusFragment extends Fragment {
     Options mOptions;
     ArrayList<String> mReturnValues = new ArrayList<>();
 
-
+    RecyclerView mRecyclerView;
+    StatusAdapter mAdapter;
+    StatusProvider mStatusProvider;
 
 
     public StatusFragment() {
@@ -60,6 +70,13 @@ public class StatusFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_status, container, false);
 
         mLinearLayoutAddStatus = mView.findViewById(R.id.linearLayputAddStatus);
+        mRecyclerView = mView.findViewById(R.id.recyclerViewStatus);
+
+        mStatusProvider = new StatusProvider();
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
 
         //ImagePicker
         mOptions = Options.init()
@@ -84,10 +101,35 @@ public class StatusFragment extends Fragment {
             }
         });
 
-
+        getStatus();
 
 
         return mView;
+    }
+
+    private void getStatus() {
+
+        mStatusProvider.getStatusByTimestampLimit().addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable @org.jetbrains.annotations.Nullable QuerySnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
+
+                if(value != null)
+                {
+
+                    ArrayList<Status> statusList = new ArrayList<>();
+
+                    for(DocumentSnapshot d: value.getDocuments())
+                    {
+                        Status s = d.toObject(Status.class);
+                        statusList.add(s);
+                    }
+
+                    mAdapter = new StatusAdapter(getActivity(),statusList);
+                    mRecyclerView.setAdapter(mAdapter);
+
+                }
+            }
+        });
     }
 
 
