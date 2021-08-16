@@ -7,6 +7,7 @@
     tools:context=".activities.StatusDetailActivity">
 
     <View
+        android:id="@+id/mainView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorFullblack"/>
@@ -16,6 +17,7 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/imageViewStatus"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/img_peluqueria"/>
@@ -32,6 +34,7 @@
                 android:alpha="0.7"/>
 
             <TextView
+                android:id="@+id/textViewComment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Comentario"
@@ -44,6 +47,7 @@
     </FrameLayout>
 
     <jp.shts.android.storiesprogressview.StoriesProgressView
+        android:id="@+id/storiesProgressView"
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:paddingLeft="8dp"

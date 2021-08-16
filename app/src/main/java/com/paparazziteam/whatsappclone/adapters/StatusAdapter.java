@@ -105,10 +105,12 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.viewHolder
         holder.circularStatusView.setPortionsCount(statusGSON.length);
 
 
+
         holder.myView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, StatusDetailActivity.class);
+                intent.putExtra("status",statusList.get(position).getJson());
                 context.startActivity(intent);
             }
         });
