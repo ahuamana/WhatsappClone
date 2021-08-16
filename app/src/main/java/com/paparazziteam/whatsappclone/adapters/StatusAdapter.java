@@ -76,18 +76,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.viewHolder
                         user = documentSnapshot.toObject(User.class);
                         holder.textViewUsername.setText(user.getUsername());
 
-                        if(user.getImage() != null)
-                        {
-                            if(!user.getImage().equals(""))
-                            {
-                                //Toast.makeText(context, "Imagen no es nula", Toast.LENGTH_SHORT).show();
 
-                                Glide.with(context)
-                                        .load(user.getImage())
-                                        .into(holder.circleImageViewUser);
-
-                            }else {holder.circleImageViewUser.setImageResource(R.drawable.ic_person);}
-                        }else { holder.circleImageViewUser.setImageResource(R.drawable.ic_person); }
                     }
                 }
 
@@ -109,6 +98,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.viewHolder
     @Override
     public void onBindViewHolder(@NonNull @NotNull viewHolder holder, int position) {
 
+        getUserInfo(holder,statusList.get(position).getIdUser());
 
 
     }
