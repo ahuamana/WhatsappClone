@@ -20,7 +20,7 @@ import java.net.URL;
 
 import jp.shts.android.storiesprogressview.StoriesProgressView;
 
-public class StatusDetailActivity extends AppCompatActivity {
+public class StatusDetailActivity extends AppCompatActivity implements StoriesProgressView.StoriesListener {
 
     StoriesProgressView mStoriesProgressView;
     TextView mTextViewComment;
@@ -28,6 +28,7 @@ public class StatusDetailActivity extends AppCompatActivity {
     View mView;
     Gson mGson = new Gson();
 
+    Status[] mStatus;
     int mCounter = 0;
 
     @Override
@@ -37,17 +38,24 @@ public class StatusDetailActivity extends AppCompatActivity {
         setStatusBarColor();  //change full topbar black color
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         mStoriesProgressView = findViewById(R.id.storiesProgressView);
         mTextViewComment = findViewById(R.id.textViewComment);
         mImageViewStatus = findViewById(R.id.imageViewStatus);
         mView = findViewById(R.id.mainView);
 
-        Status[] mStatus;
+        mStoriesProgressView.setStoriesListener(this);
 
         String statusJson = getIntent().getStringExtra("status");
         mStatus = mGson.fromJson(statusJson, Status[].class);
 
+        setStatusInfo();
+
+    }
+
+    private void setStatusInfo()
+    {
         try{
             URL url = new URL(mStatus[mCounter].getUrl());
             Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
@@ -55,12 +63,15 @@ public class StatusDetailActivity extends AppCompatActivity {
             mStoriesProgressView.setStoriesCount(mStatus.length);
             mStoriesProgressView.setStoryDuration(4000);
             mStoriesProgressView.startStories(mCounter);
+
             mImageViewStatus.setImageBitmap(image);
+            mTextViewComment.setText(mStatus[mCounter].getComment());
 
         }catch (Exception e)
         {
             Log.e("EXCEPTION","ERROR: "+e.getMessage());
         }
+
 
     }
 
@@ -76,5 +87,32 @@ public class StatusDetailActivity extends AppCompatActivity {
                 getWindow().setStatusBarColor(getResources().getColor(R.color.colorFullblack));
             }
         }
+    }
+
+    //Change State to the other
+    @Override
+    public void onNext() {
+        mCounter += 1;
+        setStatusInfo();
+    }
+
+    //change state to the last
+    @Override
+    public void onPrev() {
+       if(mCounter -1 < 0)
+       {
+           return;// Salir para que no se ejecute el metodo
+       }
+        mCounter -= 1;
+        setStatusInfo();
+
+    }
+
+    //Terminaron de mostrarse todos los stados
+    @Override
+    public void onComplete() {
+
+        finish();
+
     }
 }
